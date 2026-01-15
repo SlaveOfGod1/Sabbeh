@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
     countButton: {
         width: 160,
         height: 160,
-        bottom: 40,
+        bottom: 55,
         borderRadius: 80,
         backgroundColor: '#1C262B',
         justifyContent: 'center',

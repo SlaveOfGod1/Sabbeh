@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, FlatList, Modal, TextInput, Alert, Platform } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, FlatList, Modal, TextInput, Alert } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useDhikr } from '../context/DhikrContext';
 
 export default function CustomDrawerContent(props) {
     const { top, bottom } = useSafeAreaInsets();
-    const { dhikrs, currentDhikr, selectDhikr, addDhikr, deleteDhikr, updateDhikr } = useDhikr();
+    const { dhikrs, currentDhikr, selectDhikr, addDhikr, deleteDhikr, updateDhikr, theme } = useDhikr();
 
     const [modalVisible, setModalVisible] = useState(false);
     const [editingId, setEditingId] = useState(null);
@@ -15,6 +15,13 @@ export default function CustomDrawerContent(props) {
 
     const [optionsModalVisible, setOptionsModalVisible] = useState(false);
     const [selectedDhikrForOptions, setSelectedDhikrForOptions] = useState(null);
+
+    // Use theme color (darker shade usually at index 1 for headers in our logic, or 0? 
+    // In index.js: colors={['#4DB6AC', '#00695C']} -> Dark Green is second.
+    // Actually wait, usually gradient is Left -> Right.
+    // Let's use theme.colors[1] as the "Primary Strong" color.
+    const primaryColor = theme.colors[1] || '#00897B';
+    const secondaryColor = theme.colors[0] || '#4DB6AC';
 
     const handleSelect = (item) => {
         selectDhikr(item);
@@ -85,7 +92,7 @@ export default function CustomDrawerContent(props) {
         const isActive = currentDhikr.id === item.id;
         return (
             <TouchableOpacity
-                style={[styles.itemCard, isActive && styles.activeItemCard]}
+                style={[styles.itemCard, isActive && { backgroundColor: primaryColor, borderColor: primaryColor }]}
                 onPress={() => handleSelect(item)}
                 onLongPress={() => handleLongPress(item)}
                 delayLongPress={500}
@@ -95,7 +102,7 @@ export default function CustomDrawerContent(props) {
                     <View style={styles.itemHeaderRow}>
                         <Text style={[styles.itemTitle, isActive && styles.activeItemText]}>{item.title}</Text>
                         <View style={[styles.targetBadge, isActive && styles.activeTargetBadge]}>
-                            <Text style={[styles.targetText, isActive && styles.activeTargetText]}>{item.target}x</Text>
+                            <Text style={[styles.targetText, { color: isActive ? '#fff' : primaryColor }]}>{item.target}x</Text>
                         </View>
                     </View>
                     {item.subtitle ? (
@@ -111,7 +118,7 @@ export default function CustomDrawerContent(props) {
     return (
         <View style={{ flex: 1, backgroundColor: '#fff' }}>
             {/* Header */}
-            <View style={[styles.header, { paddingTop: top + 20 }]}>
+            <View style={[styles.header, { paddingTop: top + 20, backgroundColor: primaryColor }]}>
                 <View style={styles.headerTopRow}>
                     <Text style={styles.headerTitle}>Prayer Sessions</Text>
                 </View>
@@ -149,7 +156,7 @@ export default function CustomDrawerContent(props) {
                     onPress={() => setOptionsModalVisible(false)}
                 >
                     <View style={styles.modalView}>
-                        <Text style={styles.modalTitle}>
+                        <Text style={[styles.modalTitle, { color: primaryColor }]}>
                             Manage "{selectedDhikrForOptions?.title}"
                         </Text>
 
@@ -177,7 +184,7 @@ export default function CustomDrawerContent(props) {
             >
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
-                        <Text style={styles.modalTitle}>{editingId ? "Edit Dhikr" : "Add Custom Dhikr"}</Text>
+                        <Text style={[styles.modalTitle, { color: primaryColor }]}>{editingId ? "Edit Dhikr" : "Add Custom Dhikr"}</Text>
 
                         <Text style={styles.inputLabel}>Title</Text>
                         <TextInput
@@ -212,7 +219,7 @@ export default function CustomDrawerContent(props) {
                                 <Text style={styles.textStyle}>Cancel</Text>
                             </TouchableOpacity>
                             <TouchableOpacity
-                                style={[styles.button, styles.buttonSave]}
+                                style={[styles.button, { backgroundColor: primaryColor }]}
                                 onPress={saveDhikr}
                             >
                                 <Text style={[styles.textStyle, { color: '#fff' }]}>Save</Text>
@@ -228,7 +235,6 @@ export default function CustomDrawerContent(props) {
 
 const styles = StyleSheet.create({
     header: {
-        backgroundColor: '#00897B',
         paddingHorizontal: 20,
         paddingBottom: 20,
         borderBottomRightRadius: 0,
@@ -245,7 +251,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     headerSubtitle: {
-        color: '#B2DFDB',
+        color: '#E0F2F1',
         fontSize: 14,
     },
     listContent: {
@@ -263,10 +269,6 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0, height: 1 },
         shadowOpacity: 0.1,
         shadowRadius: 2,
-    },
-    activeItemCard: {
-        backgroundColor: '#00897B',
-        borderColor: '#00897B',
     },
     itemHeaderRow: {
         flexDirection: 'row',
@@ -290,7 +292,7 @@ const styles = StyleSheet.create({
         color: '#B2DFDB',
     },
     targetBadge: {
-        backgroundColor: '#E0F2F1',
+        backgroundColor: '#ECEFF1',
         paddingHorizontal: 8,
         paddingVertical: 4,
         borderRadius: 12,
@@ -301,10 +303,6 @@ const styles = StyleSheet.create({
     targetText: {
         fontSize: 12,
         fontWeight: 'bold',
-        color: '#00897B',
-    },
-    activeTargetText: {
-        color: '#fff',
     },
     footer: {
         padding: 20,
@@ -362,7 +360,6 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: 'bold',
         marginBottom: 15,
-        color: '#00897B',
         textAlign: 'center',
     },
     inputLabel: {
@@ -391,14 +388,10 @@ const styles = StyleSheet.create({
         padding: 12,
         elevation: 2,
         marginHorizontal: 5,
+        alignItems: 'center',
     },
     buttonClose: {
         backgroundColor: '#ECEFF1',
-        alignItems: 'center',
-    },
-    buttonSave: {
-        backgroundColor: '#00897B',
-        alignItems: 'center',
     },
     textStyle: {
         color: "black",

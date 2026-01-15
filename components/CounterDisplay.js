@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 
 export default function CounterDisplay({ count }) {
     // Pad count with zeros to look like 000
@@ -7,74 +8,79 @@ export default function CounterDisplay({ count }) {
 
     return (
         <View style={styles.container}>
-            <View style={styles.screenFrame}>
-                <View style={styles.glassEffect}>
-                    <Text style={styles.label}>Total Count</Text>
+            <LinearGradient
+                colors={['#37474F', '#102027']}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 0.5, y: 0.5 }} // Dark Blue Grey to almost Black gradient
+                style={styles.housingGradient}
+            >
+                <Text style={styles.topLabel}>Total Count</Text>
+
+                <View style={styles.lcdScreen}>
                     <Text style={styles.countText}>{formattedCount}</Text>
-                    <View style={styles.labelsRow}>
-                        <Text style={styles.subLabel}>COUNT</Text>
-                        <Text style={styles.subLabel}>RESET</Text>
-                    </View>
                 </View>
-            </View>
+
+                <View style={styles.labelsRow}>
+                    <Text style={styles.subLabel}>COUNT</Text>
+                    <Text style={styles.subLabel}>RESET</Text>
+                </View>
+            </LinearGradient>
         </View>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        alignItems: 'center',
-        marginBottom: 40,
-    },
-    screenFrame: {
-        backgroundColor: '#263238', // Dark body of the screen part
-        borderRadius: 20,
-        width: 240,
-        height: 180,
-        justifyContent: 'center',
-        alignItems: 'center',
+        marginBottom: 30,
         elevation: 8,
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.3,
-        shadowRadius: 5,
+        shadowOffset: { width: 0, height: 6 },
+        shadowOpacity: 0.4,
+        shadowRadius: 8,
     },
-    glassEffect: {
-        // Simulate the LCD glass/background
-        width: '90%',
-        height: '80%',
+    housingGradient: {
+        width: 260,
+        height: 220,
+        borderRadius: 30,
         alignItems: 'center',
         justifyContent: 'space-between',
-        paddingVertical: 15,
+        paddingVertical: 25,
     },
-    label: {
+    topLabel: {
         color: '#B0BEC5',
-        fontSize: 12,
-        letterSpacing: 1,
-        fontFamily: 'monospace', // Fallback until we load custom font
+        fontSize: 10,
+        letterSpacing: 1.5,
+        fontWeight: '600',
+        textTransform: 'uppercase',
+    },
+    lcdScreen: {
+        width: '85%',
+        height: '55%',
+        backgroundColor: '#CFD8DC', // Lighter Grey/Greenish for LCD
+        borderRadius: 15,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderWidth: 4,
+        borderColor: '#263238', // Dark border around screen
     },
     countText: {
-        color: '#dae3e5', // LCD text color often greyish or black on grey, but ref is dark bg with light text? 
-        // Wait, ref image 2 shows: Dark Blue/Black housing. Inner screen is Greyish/Greenish LCD color with Black text? 
-        // Actually looking closely at ref image 2:
-        // It's a dark panel. Inside is a LIGHTER screen (LCD color).
-        // The numbers are OUTLINED or dark. 
-        // Let's match Ref Image 2 exactly.
-        // Ref 2: Dark Panel (#2C3E50 approx). Screen: #95A5A6 (Greyish). Text: #2C3E50 (Dark).
-        fontSize: 56,
+        color: '#263238', // Dark text on light screen
+        fontSize: 64,
         fontWeight: 'bold',
         fontFamily: 'monospace',
-        letterSpacing: 4,
+        letterSpacing: 6,
+        // Provide a text shadow to simulate LCD segment separation if possible, 
+        // but standard font is OK for now.
     },
     labelsRow: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        position: 'absolute',
-        bottom: 20,
         width: '80%',
     },
     subLabel: {
-        color: '#80CBC4',
+        color: '#90A4AE',
         fontSize: 10,
+        fontWeight: '600',
+        letterSpacing: 1,
     }
 });
