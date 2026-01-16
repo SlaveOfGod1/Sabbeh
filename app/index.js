@@ -7,12 +7,14 @@ import { useDhikr } from '../context/DhikrContext';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import SimpleColorPicker from '../components/SimpleColorPicker';
+import SettingsModal from '../components/SettingsModal';
 
 export default function MainScreen() {
     const navigation = useNavigation();
     const { currentDhikr, count, rounds, updateProgress, resetCount, theme, setTheme, THEMES, applyCustomColor, toggleNightMode } = useDhikr();
 
     const [themeModalVisible, setThemeModalVisible] = useState(false);
+    const [settingsModalVisible, setSettingsModalVisible] = useState(false);
 
     // Initial color for picker
     const [tempColor, setTempColor] = useState('#42A5F5');
@@ -63,7 +65,7 @@ export default function MainScreen() {
                     <TouchableOpacity style={styles.iconButton} onPress={toggleNightMode}>
                         <Ionicons name={theme.name === 'Night' ? "moon" : "moon-outline"} size={24} color={primaryColor} />
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.iconButton}>
+                    <TouchableOpacity style={styles.iconButton} onPress={() => setSettingsModalVisible(true)}>
                         <Ionicons name="settings-outline" size={24} color={primaryColor} />
                     </TouchableOpacity>
                 </View>
@@ -126,6 +128,10 @@ export default function MainScreen() {
                 </TouchableOpacity>
             </Modal>
 
+            <SettingsModal
+                visible={settingsModalVisible}
+                onClose={() => setSettingsModalVisible(false)}
+            />
         </LinearGradient >
     );
 }

@@ -1,5 +1,9 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as FileSystem from 'expo-file-system/legacy';
+import * as Sharing from 'expo-sharing';
+import * as DocumentPicker from 'expo-document-picker';
+import { Alert, Platform } from 'react-native';
 
 const DhikrContext = createContext();
 
@@ -179,9 +183,8 @@ export function DhikrProvider({ children }) {
             // Default custom themes to light mode style unless we calculate brightness
             isDark: false,
             deviceBody: '#F5F5F5',
-            text: '#E0F2F1' // Text on background
+            text: '#E0F2F1'
         };
-        setTheme(newTheme);
         setTheme(newTheme);
     };
 
@@ -193,6 +196,164 @@ export function DhikrProvider({ children }) {
         } else {
             setLastTheme(theme);
             setTheme(THEMES.Night);
+        }
+    };
+
+    const exportProfile = async () => {
+        try {
+            const profileData = {
+                version: '1.0.0',
+                timestamp: new Date().toISOString(),
+                dhikrs,
+                progress,
+                currentDhikrId,
+                theme: theme.name === 'Night' ? lastTheme : theme,
+                isNightMode: theme.name === 'Night'
+            };
+
+            const jsonString = JSON.stringify(profileData, null, 2);
+            console.log("Data prepared");
+
+            if (Platform.OS === 'web') {
+                const blob = new Blob([jsonString], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = 'sabbeh_backup.json';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                return;
+            }
+
+            if (Platform.OS === 'android' && FileSystem.StorageAccessFramework) {
+                try {
+                    console.log("Attempting SAF...");
+                    const permissions = await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
+                    if (permissions.granted) {
+                        const uri = await FileSystem.StorageAccessFramework.createFileAsync(
+                            permissions.directoryUri,
+                            'sabbeh_backup.json',
+                            'application/json'
+                        );
+                        await FileSystem.writeAsStringAsync(uri, jsonString, { encoding: FileSystem.EncodingType.UTF8 });
+                        Alert.alert("Success", "Profile exported successfully!");
+                        return; // Exit if SAF successful
+                    } else {
+                        Alert.alert("Export Cancelled", "Permission to save file was denied.");
+                        return;
+                    }
+                } catch (safError) {
+                    console.log("SAF Failed, falling back to Sharing:", safError);
+                    // Fall through to Sharing
+                }
+            }
+
+            // Fallback for iOS or if SAF fails/missing on Android
+            console.log("Using Sharing Fallback");
+            const fileUri = FileSystem.documentDirectory + 'sabbeh_backup.json';
+            await FileSystem.writeAsStringAsync(fileUri, jsonString);
+
+            if (await Sharing.isAvailableAsync()) {
+                await Sharing.shareAsync(fileUri, {
+                    mimeType: 'application/json',
+                    dialogTitle: 'Export Sabbeh Profile',
+                    UTI: 'public.json'
+                });
+            } else {
+                Alert.alert("Export", "Sharing is not available on this device");
+            }
+        } catch (error) {
+            console.error("Export Error:", error);
+            Alert.alert("Export Failed", "Could not export profile data: " + error.message);
+        }
+    };
+
+    const importProfile = async () => {
+        console.log("Starting Import Profile [DEBUG]");
+        try {
+            if (Platform.OS === 'web') {
+                console.log("Web Import Detected");
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = 'application/json';
+                input.onchange = async (e) => {
+                    const file = e.target.files[0];
+                    if (!file) return;
+                    try {
+                        const text = await file.text();
+                        console.log("File read success, length:", text.length);
+                        const data = JSON.parse(text);
+
+                        if (!data.dhikrs || !data.progress) {
+                            alert("Invalid File: This does not look like a valid Sabbeh profile.");
+                            return;
+                        }
+
+                        if (confirm("Import Profile: This will replace your current dhikrs and progress. Are you sure?")) {
+                            setDhikrs(data.dhikrs);
+                            setProgress(data.progress);
+                            if (data.currentDhikrId) setCurrentDhikrId(data.currentDhikrId);
+                            if (data.theme) setTheme(data.theme);
+                            alert("Profile imported successfully!");
+                        }
+                    } catch (err) {
+                        console.error("Web parsing error", err);
+                        alert("Failed to parse file");
+                    }
+                };
+                input.click();
+                return;
+            }
+
+            console.log("Native Import Detected");
+            const result = await DocumentPicker.getDocumentAsync({
+                type: ['application/json', '*/*'], // Broaden type
+                copyToCacheDirectory: true
+            });
+            console.log("Picker Result:", result);
+
+            if (result.canceled) return;
+
+            const fileUri = result.assets[0].uri;
+            const fileContent = await FileSystem.readAsStringAsync(fileUri);
+            const data = JSON.parse(fileContent);
+
+            if (!data.dhikrs || !data.progress) {
+                Alert.alert("Invalid File", "This does not look like a valid Sabbeh profile.");
+                return;
+            }
+
+            // Confirm Overwrite
+            Alert.alert(
+                "Import Profile",
+                "This will replace your current dhikrs and progress. Are you sure?",
+                [
+                    { text: "Cancel", style: "cancel" },
+                    {
+                        text: "Import",
+                        style: "destructive",
+                        onPress: async () => {
+                            setDhikrs(data.dhikrs);
+                            setProgress(data.progress);
+                            if (data.currentDhikrId) setCurrentDhikrId(data.currentDhikrId);
+
+                            // Restore theme if matches preset or custom? 
+                            // For simplicity, let's load it if it looks valid
+                            if (data.theme) setTheme(data.theme);
+
+                            // If it was night mode in backup, maybe asking to restore? 
+                            // Let's just restore the base theme preference.
+
+                            Alert.alert("Success", "Profile imported successfully!");
+                        }
+                    }
+                ]
+            );
+
+        } catch (error) {
+            console.error("Import Error:", error);
+            Alert.alert("Import Failed", "Could not parse the profile file.");
         }
     };
 
@@ -212,6 +373,8 @@ export function DhikrProvider({ children }) {
             setTheme,
             applyCustomColor,
             toggleNightMode,
+            exportProfile,
+            importProfile,
             THEMES
         }}>
             {children}
