@@ -10,7 +10,7 @@ import SimpleColorPicker from '../components/SimpleColorPicker';
 
 export default function MainScreen() {
     const navigation = useNavigation();
-    const { currentDhikr, count, rounds, updateProgress, resetCount, theme, setTheme, THEMES, applyCustomColor } = useDhikr();
+    const { currentDhikr, count, rounds, updateProgress, resetCount, theme, setTheme, THEMES, applyCustomColor, toggleNightMode } = useDhikr();
 
     const [themeModalVisible, setThemeModalVisible] = useState(false);
 
@@ -25,11 +25,15 @@ export default function MainScreen() {
         return (
             <TouchableOpacity
                 key={key}
-                style={[styles.themeOption, isActive && styles.activeThemeOption]}
+                style={[
+                    styles.themeOption,
+                    theme.isDark && { backgroundColor: '#37474F', borderColor: '#455A64' },
+                    isActive && styles.activeThemeOption
+                ]}
                 onPress={() => setTheme(themeOption)}
             >
                 <View style={[styles.themePreview, { backgroundColor: themeOption.colors[1] }]} />
-                <Text style={styles.themeName}>{themeOption.name}</Text>
+                <Text style={[styles.themeName, theme.isDark && { color: '#B0BEC5' }]}>{themeOption.name}</Text>
             </TouchableOpacity>
         );
     };
@@ -56,8 +60,8 @@ export default function MainScreen() {
                     <TouchableOpacity style={styles.iconButton} onPress={() => setThemeModalVisible(true)}>
                         <Ionicons name="color-palette-outline" size={24} color={primaryColor} />
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.iconButton}>
-                        <Ionicons name="moon-outline" size={24} color={primaryColor} />
+                    <TouchableOpacity style={styles.iconButton} onPress={toggleNightMode}>
+                        <Ionicons name={theme.name === 'Night' ? "moon" : "moon-outline"} size={24} color={primaryColor} />
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.iconButton}>
                         <Ionicons name="settings-outline" size={24} color={primaryColor} />
@@ -75,7 +79,7 @@ export default function MainScreen() {
                     </View>
                 </View>
 
-                <View style={styles.deviceBody}>
+                <View style={[styles.deviceBody, { backgroundColor: theme.deviceBody || '#F5F5F5' }]}>
                     <CounterDisplay count={count} />
                     <CounterControls onCount={() => updateProgress(1)} onReset={resetCount} />
                 </View>
@@ -93,21 +97,20 @@ export default function MainScreen() {
                     activeOpacity={1}
                     onPress={() => setThemeModalVisible(false)}
                 >
-                    <TouchableOpacity
-                        style={[styles.themeModal, { bottom: 0 }]}
-                        activeOpacity={1}
-                    >
+                    <TouchableOpacity activeOpacity={1} style={[styles.themeModal, { bottom: 0, backgroundColor: theme.isDark ? '#263238' : '#fff' }]}>
                         <View style={styles.modalHandle} />
                         <View style={styles.modalHeader}>
-                            <Ionicons name="color-palette-outline" size={20} color="#37474F" />
-                            <Text style={styles.modalTitle}>Color Themes</Text>
+                            <Ionicons name="color-palette-outline" size={20} color={theme.isDark ? '#ECEFF1' : '#37474F'} />
+                            <Text style={[styles.modalTitle, theme.isDark && { color: '#ECEFF1' }]}>Color Themes</Text>
                         </View>
 
                         <View style={styles.themesGrid}>
-                            {Object.entries(THEMES).map(([key, themeOption]) => renderThemeButton(key, themeOption))}
+                            {Object.entries(THEMES)
+                                .filter(([key]) => key !== 'Night')
+                                .map(([key, themeOption]) => renderThemeButton(key, themeOption))}
                         </View>
 
-                        <Text style={styles.sectionTitle}>Custom Color</Text>
+                        <Text style={[styles.sectionTitle, theme.isDark && { color: '#ECEFF1' }]}>Custom Color</Text>
                         <View style={styles.customPickerContainer}>
                             <SimpleColorPicker
                                 initialColor={tempColor}
@@ -123,7 +126,7 @@ export default function MainScreen() {
                 </TouchableOpacity>
             </Modal>
 
-        </LinearGradient>
+        </LinearGradient >
     );
 }
 
@@ -255,7 +258,7 @@ const styles = StyleSheet.create({
         width: '45%',
         padding: 10,
         borderRadius: 12,
-        backgroundColor: '#FAFAFA',
+        backgroundColor: '#FAFAFA', // We override this in render if dark? Or just change base style logic
         borderWidth: 1,
         borderColor: '#ECEFF1',
         gap: 10,

@@ -20,6 +20,14 @@ const THEMES = {
     Purple: { name: 'Purple', colors: ['#BA68C8', '#4A148C'], end: { x: 1, y: 0.18 } },
     Blue: { name: 'Blue', colors: ['#42A5F5', '#0D47A1'], end: { x: 1, y: 0.18 } },
     Rose: { name: 'Rose', colors: ['#EC407A', '#880E4F'], end: { x: 1, y: 0.18 } },
+    Night: {
+        name: 'Night',
+        colors: ['#0000006f', '#000000ff'], // Dark Gray -> Semi Black
+        end: { x: 0, y: 0 },
+        isDark: true,
+        deviceBody: '#2d363dff', // Dark Blue Grey for device body
+        text: '#ECEFF1'
+    }
 };
 
 export function DhikrProvider({ children }) {
@@ -167,9 +175,25 @@ export function DhikrProvider({ children }) {
         const newTheme = {
             name: 'Custom',
             colors: [lightShade, darkShade],
-            end: { x: 1, y: 0.18 }
+            end: { x: 1, y: 0.18 },
+            // Default custom themes to light mode style unless we calculate brightness
+            isDark: false,
+            deviceBody: '#F5F5F5',
+            text: '#E0F2F1' // Text on background
         };
         setTheme(newTheme);
+        setTheme(newTheme);
+    };
+
+    const [lastTheme, setLastTheme] = useState(THEMES.Teal);
+
+    const toggleNightMode = () => {
+        if (theme.name === 'Night') {
+            setTheme(lastTheme);
+        } else {
+            setLastTheme(theme);
+            setTheme(THEMES.Night);
+        }
     };
 
     return (
@@ -187,6 +211,7 @@ export function DhikrProvider({ children }) {
             theme,
             setTheme,
             applyCustomColor,
+            toggleNightMode,
             THEMES
         }}>
             {children}

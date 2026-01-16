@@ -16,12 +16,8 @@ export default function CustomDrawerContent(props) {
     const [optionsModalVisible, setOptionsModalVisible] = useState(false);
     const [selectedDhikrForOptions, setSelectedDhikrForOptions] = useState(null);
 
-    // Use theme color (darker shade usually at index 1 for headers in our logic, or 0? 
-    // In index.js: colors={['#4DB6AC', '#00695C']} -> Dark Green is second.
-    // Actually wait, usually gradient is Left -> Right.
-    // Let's use theme.colors[1] as the "Primary Strong" color.
+    // Use theme color
     const primaryColor = theme.colors[1] || '#00897B';
-    const secondaryColor = theme.colors[0] || '#4DB6AC';
 
     const handleSelect = (item) => {
         selectDhikr(item);
@@ -92,7 +88,11 @@ export default function CustomDrawerContent(props) {
         const isActive = currentDhikr.id === item.id;
         return (
             <TouchableOpacity
-                style={[styles.itemCard, isActive && { backgroundColor: primaryColor, borderColor: primaryColor }]}
+                style={[
+                    styles.itemCard,
+                    theme.isDark && { backgroundColor: '#37474F', borderColor: '#455A64' },
+                    isActive && { backgroundColor: primaryColor, borderColor: primaryColor }
+                ]}
                 onPress={() => handleSelect(item)}
                 onLongPress={() => handleLongPress(item)}
                 delayLongPress={500}
@@ -100,13 +100,13 @@ export default function CustomDrawerContent(props) {
             >
                 <View>
                     <View style={styles.itemHeaderRow}>
-                        <Text style={[styles.itemTitle, isActive && styles.activeItemText]}>{item.title}</Text>
-                        <View style={[styles.targetBadge, isActive && styles.activeTargetBadge]}>
-                            <Text style={[styles.targetText, { color: isActive ? '#fff' : primaryColor }]}>{item.target}x</Text>
+                        <Text style={[styles.itemTitle, theme.isDark && { color: '#ECEFF1' }, isActive && styles.activeItemText]}>{item.title}</Text>
+                        <View style={[styles.targetBadge, theme.isDark && { backgroundColor: '#455A64' }, isActive && styles.activeTargetBadge]}>
+                            <Text style={[styles.targetText, { color: isActive ? '#fff' : (theme.isDark ? '#B0BEC5' : primaryColor) }]}>{item.target}x</Text>
                         </View>
                     </View>
                     {item.subtitle ? (
-                        <Text style={[styles.itemSubtitle, isActive && styles.activeItemSubtitle]}>
+                        <Text style={[styles.itemSubtitle, theme.isDark && { color: '#B0BEC5' }, isActive && styles.activeItemSubtitle]}>
                             {item.subtitle}
                         </Text>
                     ) : null}
@@ -115,8 +115,15 @@ export default function CustomDrawerContent(props) {
         );
     };
 
+    // Determine header and footer background based on theme for better integration
+    // Simplest is to keep them white or match theme?
+    // Let's use theme property if available or fallback
+    const headerBg = theme.deviceBody || primaryColor; // Using deviceBody for header? No, header is primary usually.
+
+    // Actually, header usually primary color.
+
     return (
-        <View style={{ flex: 1, backgroundColor: '#fff' }}>
+        <View style={{ flex: 1, backgroundColor: theme.isDark ? '#263238' : '#fff' }}>
             {/* Header */}
             <View style={[styles.header, { paddingTop: top + 20, backgroundColor: primaryColor }]}>
                 <View style={styles.headerTopRow}>
@@ -135,11 +142,11 @@ export default function CustomDrawerContent(props) {
             />
 
             {/* Footer */}
-            <View style={[styles.footer, { paddingBottom: bottom + 20 }]}>
-                <TouchableOpacity style={styles.addButton} onPress={openAddModal}>
-                    <Text style={styles.addButtonText}>+ Add Custom Dhikr</Text>
+            <View style={[styles.footer, { paddingBottom: bottom + 20, borderColor: theme.isDark ? '#37474F' : '#EEEEEE' }]}>
+                <TouchableOpacity style={[styles.addButton, theme.isDark && { borderColor: '#546E7A', backgroundColor: '#37474F' }]} onPress={openAddModal}>
+                    <Text style={[styles.addButtonText, theme.isDark && { color: '#B0BEC5' }]}>+ Add Custom Dhikr</Text>
                 </TouchableOpacity>
-                <Text style={styles.footerNote}>May Allah accept your dhikr</Text>
+                <Text style={[styles.footerNote, theme.isDark && { color: '#90A4AE' }]}>May Allah accept your dhikr</Text>
                 <Text style={styles.footerSubNote}>Long press custom dhikr to edit/delete</Text>
             </View>
 
@@ -155,21 +162,35 @@ export default function CustomDrawerContent(props) {
                     activeOpacity={1}
                     onPress={() => setOptionsModalVisible(false)}
                 >
-                    <View style={styles.modalView}>
-                        <Text style={[styles.modalTitle, { color: primaryColor }]}>
+                    <View style={[styles.modalView, theme.isDark && { backgroundColor: '#37474F' }]}>
+                        <Text style={[styles.modalTitle, { color: theme.isDark ? '#ECEFF1' : primaryColor }]}>
                             Manage "{selectedDhikrForOptions?.title}"
                         </Text>
 
-                        <TouchableOpacity style={[styles.optionButton, styles.optionButtonEdit]} onPress={handleOptionEdit}>
-                            <Text style={styles.optionButtonText}>Edit Dhikr</Text>
+                        <TouchableOpacity
+                            style={[
+                                styles.optionButton,
+                                styles.optionButtonEdit,
+                                theme.isDark && { backgroundColor: '#455A64', borderColor: '#546E7A' }
+                            ]}
+                            onPress={handleOptionEdit}
+                        >
+                            <Text style={[styles.optionButtonText, theme.isDark && { color: '#ECEFF1' }]}>Edit Dhikr</Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity style={[styles.optionButton, styles.optionButtonDelete]} onPress={handleOptionDelete}>
-                            <Text style={[styles.optionButtonText, { color: '#D32F2F' }]}>Delete Dhikr</Text>
+                        <TouchableOpacity
+                            style={[
+                                styles.optionButton,
+                                styles.optionButtonDelete,
+                                theme.isDark && { backgroundColor: '#3E2723', borderColor: '#D32F2F' }
+                            ]}
+                            onPress={handleOptionDelete}
+                        >
+                            <Text style={[styles.optionButtonText, { color: '#FF5252' }]}>Delete Dhikr</Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity style={styles.optionButtonCancel} onPress={() => setOptionsModalVisible(false)}>
-                            <Text style={styles.optionButtonCancelText}>Cancel</Text>
+                            <Text style={[styles.optionButtonCancelText, theme.isDark && { color: '#B0BEC5' }]}>Cancel</Text>
                         </TouchableOpacity>
                     </View>
                 </TouchableOpacity>
@@ -183,29 +204,32 @@ export default function CustomDrawerContent(props) {
                 onRequestClose={() => setModalVisible(false)}
             >
                 <View style={styles.centeredView}>
-                    <View style={styles.modalView}>
-                        <Text style={[styles.modalTitle, { color: primaryColor }]}>{editingId ? "Edit Dhikr" : "Add Custom Dhikr"}</Text>
+                    <View style={[styles.modalView, theme.isDark && { backgroundColor: '#37474F' }]}>
+                        <Text style={[styles.modalTitle, { color: theme.isDark ? '#ECEFF1' : primaryColor }]}>{editingId ? "Edit Dhikr" : "Add Custom Dhikr"}</Text>
 
-                        <Text style={styles.inputLabel}>Title</Text>
+                        <Text style={[styles.inputLabel, theme.isDark && { color: '#B0BEC5' }]}>Title</Text>
                         <TextInput
-                            style={styles.input}
+                            style={[styles.input, theme.isDark && { backgroundColor: '#455A64', borderColor: '#546E7A', color: '#fff' }]}
                             placeholder="e.g. Salawat"
+                            placeholderTextColor={theme.isDark ? '#90A4AE' : '#999'}
                             value={title}
                             onChangeText={setTitle}
                         />
 
-                        <Text style={styles.inputLabel}>Subtitle (Optional)</Text>
+                        <Text style={[styles.inputLabel, theme.isDark && { color: '#B0BEC5' }]}>Subtitle (Optional)</Text>
                         <TextInput
-                            style={styles.input}
+                            style={[styles.input, theme.isDark && { backgroundColor: '#455A64', borderColor: '#546E7A', color: '#fff' }]}
                             placeholder="e.g. Allahumma salli ala..."
+                            placeholderTextColor={theme.isDark ? '#90A4AE' : '#999'}
                             value={subtitle}
                             onChangeText={setSubtitle}
                         />
 
-                        <Text style={styles.inputLabel}>Count per Round</Text>
+                        <Text style={[styles.inputLabel, theme.isDark && { color: '#B0BEC5' }]}>Count per Round</Text>
                         <TextInput
-                            style={styles.input}
+                            style={[styles.input, theme.isDark && { backgroundColor: '#455A64', borderColor: '#546E7A', color: '#fff' }]}
                             placeholder="33"
+                            placeholderTextColor={theme.isDark ? '#90A4AE' : '#999'}
                             value={target}
                             onChangeText={setTarget}
                             keyboardType="numeric"
@@ -213,10 +237,10 @@ export default function CustomDrawerContent(props) {
 
                         <View style={styles.modalButtons}>
                             <TouchableOpacity
-                                style={[styles.button, styles.buttonClose]}
+                                style={[styles.button, styles.buttonClose, theme.isDark && { backgroundColor: '#546E7A' }]}
                                 onPress={() => setModalVisible(false)}
                             >
-                                <Text style={styles.textStyle}>Cancel</Text>
+                                <Text style={[styles.textStyle, theme.isDark && { color: '#ECEFF1' }]}>Cancel</Text>
                             </TouchableOpacity>
                             <TouchableOpacity
                                 style={[styles.button, { backgroundColor: primaryColor }]}
