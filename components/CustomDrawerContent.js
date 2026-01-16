@@ -5,7 +5,7 @@ import { useDhikr } from '../context/DhikrContext';
 
 export default function CustomDrawerContent(props) {
     const { top, bottom } = useSafeAreaInsets();
-    const { dhikrs, currentDhikr, selectDhikr, addDhikr, deleteDhikr, updateDhikr, theme } = useDhikr();
+    const { dhikrs, currentDhikr, selectDhikr, addDhikr, deleteDhikr, updateDhikr, theme, i18n } = useDhikr();
 
     const [modalVisible, setModalVisible] = useState(false);
     const [editingId, setEditingId] = useState(null);
@@ -44,16 +44,44 @@ export default function CustomDrawerContent(props) {
         }
     };
 
+    const getDhikrTitle = (dhikr) => {
+        if (dhikr.nameKey) return i18n(dhikr.nameKey);
+        // Fallback for existing data using ID
+        switch (dhikr.id) {
+            case '1': return i18n('d_tasbih');
+            case '2': return i18n('d_tahmid');
+            case '3': return i18n('d_takbir');
+            case '4': return i18n('d_istighfar');
+            case '5': return i18n('d_salawat');
+            case '6': return i18n('d_tahlil');
+            default: return dhikr.title;
+        }
+    };
+
+    const getDhikrSubtitle = (dhikr) => {
+        if (dhikr.subtitleKey) return i18n(dhikr.subtitleKey);
+        // Fallback for existing data using ID
+        switch (dhikr.id) {
+            case '1': return i18n('s_tasbih');
+            case '2': return i18n('s_tahmid');
+            case '3': return i18n('s_takbir');
+            case '4': return i18n('s_istighfar');
+            case '5': return i18n('s_salawat');
+            case '6': return i18n('s_tahlil');
+            default: return dhikr.subtitle;
+        }
+    };
+
     const handleOptionDelete = () => {
         setOptionsModalVisible(false);
         if (selectedDhikrForOptions) {
             Alert.alert(
-                "Delete Dhikr",
-                `Are you sure you want to delete "${selectedDhikrForOptions.title}"?`,
+                i18n('deleteDhikr'),
+                `${i18n('confirmDelete')}`,
                 [
-                    { text: "Cancel", style: "cancel" },
+                    { text: i18n('cancel'), style: "cancel" },
                     {
-                        text: "Delete",
+                        text: i18n('delete'),
                         style: "destructive",
                         onPress: () => deleteDhikr(selectedDhikrForOptions.id)
                     }
@@ -72,7 +100,7 @@ export default function CustomDrawerContent(props) {
 
     const saveDhikr = () => {
         if (!title.trim()) {
-            Alert.alert("Error", "Please enter a name for the Dhikr");
+            Alert.alert(i18n('error'), "Please enter a name for the Dhikr");
             return;
         }
 
@@ -100,14 +128,16 @@ export default function CustomDrawerContent(props) {
             >
                 <View>
                     <View style={styles.itemHeaderRow}>
-                        <Text style={[styles.itemTitle, theme.isDark && { color: '#ECEFF1' }, isActive && styles.activeItemText]}>{item.title}</Text>
+                        <Text style={[styles.itemTitle, theme.isDark && { color: '#ECEFF1' }, isActive && styles.activeItemText]}>
+                            {getDhikrTitle(item)}
+                        </Text>
                         <View style={[styles.targetBadge, theme.isDark && { backgroundColor: '#455A64' }, isActive && styles.activeTargetBadge]}>
                             <Text style={[styles.targetText, { color: isActive ? '#fff' : (theme.isDark ? '#B0BEC5' : primaryColor) }]}>{item.target}x</Text>
                         </View>
                     </View>
                     {item.subtitle ? (
                         <Text style={[styles.itemSubtitle, theme.isDark && { color: '#B0BEC5' }, isActive && styles.activeItemSubtitle]}>
-                            {item.subtitle}
+                            {getDhikrSubtitle(item)}
                         </Text>
                     ) : null}
                 </View>
@@ -127,9 +157,9 @@ export default function CustomDrawerContent(props) {
             {/* Header */}
             <View style={[styles.header, { paddingTop: top + 20, backgroundColor: primaryColor }]}>
                 <View style={styles.headerTopRow}>
-                    <Text style={styles.headerTitle}>Prayer Sessions</Text>
+                    <Text style={styles.headerTitle}>{i18n('appName')}</Text>
                 </View>
-                <Text style={styles.headerSubtitle}>Select your dhikr practice</Text>
+                <Text style={styles.headerSubtitle}>{i18n('appShortDesc')}</Text>
             </View>
 
             {/* List */}
@@ -142,12 +172,12 @@ export default function CustomDrawerContent(props) {
             />
 
             {/* Footer */}
-            <View style={[styles.footer, { paddingBottom: bottom + 20, borderColor: theme.isDark ? '#37474F' : '#EEEEEE' }]}>
+            <View style={[styles.footer, { paddingBottom: bottom + 13, borderColor: theme.isDark ? '#37474F' : '#EEEEEE' }]}>
                 <TouchableOpacity style={[styles.addButton, theme.isDark && { borderColor: '#546E7A', backgroundColor: '#37474F' }]} onPress={openAddModal}>
-                    <Text style={[styles.addButtonText, theme.isDark && { color: '#B0BEC5' }]}>+ Add Custom Dhikr</Text>
+                    <Text style={[styles.addButtonText, theme.isDark && { color: '#B0BEC5' }]}>+ {i18n('addDhikr')}</Text>
                 </TouchableOpacity>
-                <Text style={[styles.footerNote, theme.isDark && { color: '#90A4AE' }]}>May Allah accept your dhikr</Text>
-                <Text style={styles.footerSubNote}>Long press custom dhikr to edit/delete</Text>
+                <Text style={[styles.footerNote, theme.isDark && { color: '#90A4AE' }]}>{i18n('appName')}</Text>
+                <Text style={styles.footerSubNote}>v1.0.0</Text>
             </View>
 
             {/* Modal for Options (Edit/Delete) */}
@@ -164,7 +194,7 @@ export default function CustomDrawerContent(props) {
                 >
                     <View style={[styles.modalView, theme.isDark && { backgroundColor: '#37474F' }]}>
                         <Text style={[styles.modalTitle, { color: theme.isDark ? '#ECEFF1' : primaryColor }]}>
-                            Manage "{selectedDhikrForOptions?.title}"
+                            {selectedDhikrForOptions?.title}
                         </Text>
 
                         <TouchableOpacity
@@ -175,7 +205,7 @@ export default function CustomDrawerContent(props) {
                             ]}
                             onPress={handleOptionEdit}
                         >
-                            <Text style={[styles.optionButtonText, theme.isDark && { color: '#ECEFF1' }]}>Edit Dhikr</Text>
+                            <Text style={[styles.optionButtonText, theme.isDark && { color: '#ECEFF1' }]}>{i18n('editDhikr')}</Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity
@@ -186,11 +216,11 @@ export default function CustomDrawerContent(props) {
                             ]}
                             onPress={handleOptionDelete}
                         >
-                            <Text style={[styles.optionButtonText, { color: '#FF5252' }]}>Delete Dhikr</Text>
+                            <Text style={[styles.optionButtonText, { color: '#FF5252' }]}>{i18n('deleteDhikr')}</Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity style={styles.optionButtonCancel} onPress={() => setOptionsModalVisible(false)}>
-                            <Text style={[styles.optionButtonCancelText, theme.isDark && { color: '#B0BEC5' }]}>Cancel</Text>
+                            <Text style={[styles.optionButtonCancelText, theme.isDark && { color: '#B0BEC5' }]}>{i18n('cancel')}</Text>
                         </TouchableOpacity>
                     </View>
                 </TouchableOpacity>
@@ -205,9 +235,9 @@ export default function CustomDrawerContent(props) {
             >
                 <View style={styles.centeredView}>
                     <View style={[styles.modalView, theme.isDark && { backgroundColor: '#37474F' }]}>
-                        <Text style={[styles.modalTitle, { color: theme.isDark ? '#ECEFF1' : primaryColor }]}>{editingId ? "Edit Dhikr" : "Add Custom Dhikr"}</Text>
+                        <Text style={[styles.modalTitle, { color: theme.isDark ? '#ECEFF1' : primaryColor }]}>{editingId ? i18n('editDhikr') : i18n('addDhikr')}</Text>
 
-                        <Text style={[styles.inputLabel, theme.isDark && { color: '#B0BEC5' }]}>Title</Text>
+                        <Text style={[styles.inputLabel, theme.isDark && { color: '#B0BEC5' }]}>{i18n('title')}</Text>
                         <TextInput
                             style={[styles.input, theme.isDark && { backgroundColor: '#455A64', borderColor: '#546E7A', color: '#fff' }]}
                             placeholder="e.g. Salawat"
@@ -216,7 +246,7 @@ export default function CustomDrawerContent(props) {
                             onChangeText={setTitle}
                         />
 
-                        <Text style={[styles.inputLabel, theme.isDark && { color: '#B0BEC5' }]}>Subtitle (Optional)</Text>
+                        <Text style={[styles.inputLabel, theme.isDark && { color: '#B0BEC5' }]}>{i18n('subtitle')}</Text>
                         <TextInput
                             style={[styles.input, theme.isDark && { backgroundColor: '#455A64', borderColor: '#546E7A', color: '#fff' }]}
                             placeholder="e.g. Allahumma salli ala..."
@@ -225,7 +255,7 @@ export default function CustomDrawerContent(props) {
                             onChangeText={setSubtitle}
                         />
 
-                        <Text style={[styles.inputLabel, theme.isDark && { color: '#B0BEC5' }]}>Count per Round</Text>
+                        <Text style={[styles.inputLabel, theme.isDark && { color: '#B0BEC5' }]}>{i18n('target')}</Text>
                         <TextInput
                             style={[styles.input, theme.isDark && { backgroundColor: '#455A64', borderColor: '#546E7A', color: '#fff' }]}
                             placeholder="33"
@@ -240,13 +270,13 @@ export default function CustomDrawerContent(props) {
                                 style={[styles.button, styles.buttonClose, theme.isDark && { backgroundColor: '#546E7A' }]}
                                 onPress={() => setModalVisible(false)}
                             >
-                                <Text style={[styles.textStyle, theme.isDark && { color: '#ECEFF1' }]}>Cancel</Text>
+                                <Text style={[styles.textStyle, theme.isDark && { color: '#ECEFF1' }]}>{i18n('cancel')}</Text>
                             </TouchableOpacity>
                             <TouchableOpacity
                                 style={[styles.button, { backgroundColor: primaryColor }]}
                                 onPress={saveDhikr}
                             >
-                                <Text style={[styles.textStyle, { color: '#fff' }]}>Save</Text>
+                                <Text style={[styles.textStyle, { color: '#fff' }]}>{i18n('save')}</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -329,7 +359,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     footer: {
-        padding: 20,
+        padding: 15,
         borderTopWidth: 1,
         borderTopColor: '#EEEEEE',
         alignItems: 'center',
@@ -342,7 +372,7 @@ const styles = StyleSheet.create({
         borderRadius: 12,
         borderStyle: 'dashed',
         alignItems: 'center',
-        marginBottom: 20,
+        marginBottom: 10,
         backgroundColor: '#FAFAFA',
     },
     addButtonText: {

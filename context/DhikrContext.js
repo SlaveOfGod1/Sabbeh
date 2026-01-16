@@ -3,19 +3,20 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as FileSystem from 'expo-file-system/legacy';
 import * as Sharing from 'expo-sharing';
 import * as DocumentPicker from 'expo-document-picker';
-import { Alert, Platform } from 'react-native';
+import { Alert, Platform, I18nManager } from 'react-native';
+import { TRANSLATIONS } from '../constants/constants';
 
 const DhikrContext = createContext();
 
 const STORAGE_KEY = '@sabbeh_dhikrs_v1';
 
 const INITIAL_DHIKRS = [
-    { id: '1', title: 'Tasbih', subtitle: 'SubhanAllah', target: 33 },
-    { id: '2', title: 'Tahmid', subtitle: 'Alhamdulillah', target: 33 },
-    { id: '3', title: 'Takbir', subtitle: 'Allahu Akbar', target: 34 },
-    { id: '4', title: 'Istighfar', subtitle: 'Astaghfirullah', target: 100 },
-    { id: '5', title: 'Salawat', subtitle: 'Salawat on Prophet', target: 100 },
-    { id: '6', title: 'La ilaha illallah', subtitle: 'Tahlil', target: 100 },
+    { id: '1', title: 'Tasbih', subtitle: 'SubhanAllah', target: 33, nameKey: 'd_tasbih', subtitleKey: 's_tasbih' },
+    { id: '2', title: 'Tahmid', subtitle: 'Alhamdulillah', target: 33, nameKey: 'd_tahmid', subtitleKey: 's_tahmid' },
+    { id: '3', title: 'Takbir', subtitle: 'Allahu Akbar', target: 34, nameKey: 'd_takbir', subtitleKey: 's_takbir' },
+    { id: '4', title: 'Istighfar', subtitle: 'Astaghfirullah', target: 100, nameKey: 'd_istighfar', subtitleKey: 's_istighfar' },
+    { id: '5', title: 'Salawat', subtitle: 'Salawat on Prophet', target: 100, nameKey: 'd_salawat', subtitleKey: 's_salawat' },
+    { id: '6', title: 'La ilaha illallah', subtitle: 'Tahlil', target: 100, nameKey: 'd_tahlil', subtitleKey: 's_tahlil' },
 ];
 
 // Theme Presets
@@ -39,6 +40,13 @@ export function DhikrProvider({ children }) {
     const [currentDhikrId, setCurrentDhikrId] = useState('1');
     const [progress, setProgress] = useState({});
     const [theme, setTheme] = useState(THEMES.Teal);
+    const [language, setLanguage] = useState('en');
+
+    // i18n Helper
+    const i18n = (key) => {
+        const langData = TRANSLATIONS[language] || TRANSLATIONS['en'];
+        return langData[key] || key;
+    };
 
     useEffect(() => {
         loadData();
@@ -46,7 +54,7 @@ export function DhikrProvider({ children }) {
 
     useEffect(() => {
         saveData();
-    }, [dhikrs, progress, currentDhikrId, theme]);
+    }, [dhikrs, progress, currentDhikrId, theme, language]);
 
     const loadData = async () => {
         try {
@@ -57,6 +65,7 @@ export function DhikrProvider({ children }) {
                 if (parsed.progress) setProgress(parsed.progress);
                 if (parsed.currentDhikrId) setCurrentDhikrId(parsed.currentDhikrId);
                 if (parsed.theme) setTheme(parsed.theme);
+                if (parsed.language) setLanguage(parsed.language);
             }
         } catch (e) {
             console.log('Failed to load dhikr data');
@@ -69,7 +78,8 @@ export function DhikrProvider({ children }) {
                 dhikrs,
                 progress,
                 currentDhikrId,
-                theme
+                theme,
+                language
             };
             await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(data));
         } catch (e) {
@@ -237,10 +247,11 @@ export function DhikrProvider({ children }) {
                             'application/json'
                         );
                         await FileSystem.writeAsStringAsync(uri, jsonString, { encoding: FileSystem.EncodingType.UTF8 });
-                        Alert.alert("Success", "Profile exported successfully!");
+                        await FileSystem.writeAsStringAsync(uri, jsonString, { encoding: FileSystem.EncodingType.UTF8 });
+                        Alert.alert(i18n('success'), i18n('exported'), [{ text: i18n('ok') }]);
                         return; // Exit if SAF successful
                     } else {
-                        Alert.alert("Export Cancelled", "Permission to save file was denied.");
+                        Alert.alert(i18n('error'), "Permission to save file was denied.");
                         return;
                     }
                 } catch (safError) {
@@ -257,15 +268,15 @@ export function DhikrProvider({ children }) {
             if (await Sharing.isAvailableAsync()) {
                 await Sharing.shareAsync(fileUri, {
                     mimeType: 'application/json',
-                    dialogTitle: 'Export Sabbeh Profile',
+                    dialogTitle: i18n('exportProfile'),
                     UTI: 'public.json'
                 });
             } else {
-                Alert.alert("Export", "Sharing is not available on this device");
+                Alert.alert(i18n('error'), "Sharing is not available on this device");
             }
         } catch (error) {
             console.error("Export Error:", error);
-            Alert.alert("Export Failed", "Could not export profile data: " + error.message);
+            Alert.alert(i18n('error'), "Failed to export profile");
         }
     };
 
@@ -320,18 +331,18 @@ export function DhikrProvider({ children }) {
             const data = JSON.parse(fileContent);
 
             if (!data.dhikrs || !data.progress) {
-                Alert.alert("Invalid File", "This does not look like a valid Sabbeh profile.");
+                Alert.alert(i18n('error'), "This does not look like a valid Sabbeh profile.");
                 return;
             }
 
             // Confirm Overwrite
             Alert.alert(
-                "Import Profile",
-                "This will replace your current dhikrs and progress. Are you sure?",
+                i18n('importProfile'),
+                i18n('confirmImport'),
                 [
-                    { text: "Cancel", style: "cancel" },
+                    { text: i18n('cancel'), style: "cancel" },
                     {
-                        text: "Import",
+                        text: i18n('importButton'),
                         style: "destructive",
                         onPress: async () => {
                             setDhikrs(data.dhikrs);
@@ -345,7 +356,9 @@ export function DhikrProvider({ children }) {
                             // If it was night mode in backup, maybe asking to restore? 
                             // Let's just restore the base theme preference.
 
-                            Alert.alert("Success", "Profile imported successfully!");
+                            // Let's just restore the base theme preference.
+
+                            Alert.alert(i18n('success'), i18n('imported'), [{ text: i18n('ok') }]);
                         }
                     }
                 ]
@@ -353,8 +366,34 @@ export function DhikrProvider({ children }) {
 
         } catch (error) {
             console.error("Import Error:", error);
-            Alert.alert("Import Failed", "Could not parse the profile file.");
+            Alert.alert(i18n('error'), "Could not parse the profile file.");
         }
+    };
+
+    const resetAppData = async () => {
+        Alert.alert(
+            i18n('resetData'),
+            i18n('confirmResetData'),
+            [
+                { text: i18n('cancel'), style: "cancel" },
+                {
+                    text: i18n('resetButton'),
+                    style: "destructive",
+                    onPress: async () => {
+                        try {
+                            await AsyncStorage.removeItem(STORAGE_KEY);
+                            setDhikrs(INITIAL_DHIKRS);
+                            setProgress({});
+                            setCurrentDhikrId('1');
+                            setTheme(THEMES.Teal);
+                            Alert.alert(i18n('success'), i18n('resetDataDesc'), [{ text: i18n('ok') }]);
+                        } catch (e) {
+                            Alert.alert(i18n('error'), "Failed to reset data");
+                        }
+                    }
+                }
+            ]
+        );
     };
 
     return (
@@ -375,7 +414,11 @@ export function DhikrProvider({ children }) {
             toggleNightMode,
             exportProfile,
             importProfile,
-            THEMES
+            resetAppData,
+            THEMES,
+            language,
+            setLanguage,
+            i18n
         }}>
             {children}
         </DhikrContext.Provider>

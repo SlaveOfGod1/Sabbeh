@@ -3,15 +3,16 @@ import { View, StyleSheet, TouchableOpacity, Text, Dimensions, PanResponder } fr
 import { LinearGradient } from 'expo-linear-gradient';
 
 export default function SimpleColorPicker({ onSelectColor, initialColor }) {
-    const [hue, setHue] = useState(0);
-    const [selectedColor, setSelectedColor] = useState(initialColor || '#42A5F5');
-    const [markerPosition, setMarkerPosition] = useState(0);
-
+    // Default to middle (Cyan-ish) if no valid initialColor logic 
+    // This solves the user request to have the selector in the middle by default
     const sliderWidth = 300;
+    const [hue, setHue] = useState(180);
+    const [selectedColor, setSelectedColor] = useState(initialColor || '#2EADB3'); // Dimmer Cyan match for 180, 60, 45
+    const [markerPosition, setMarkerPosition] = useState(sliderWidth / 2);
 
     useEffect(() => {
         // Optional: Try to reverse engineer hex to hue position if needed, 
-        // but for simplicity we start at 0 or let user pick.
+        // but for simplicity we start at middle.
     }, []);
 
     // Simple HSL to Hex conversion
@@ -34,10 +35,14 @@ export default function SimpleColorPicker({ onSelectColor, initialColor }) {
 
         const newHue = Math.floor((x / sliderWidth) * 360);
         setHue(newHue);
-        const color = hslToHex(newHue, 100, 50);
+        // User requested less saturated and more dim colors
+        // Reduced Saturation from 100 to 60, Lightness from 50 to 45
+        const color = hslToHex(newHue, 60, 45);
         setSelectedColor(color);
         onSelectColor(color);
     };
+
+    const dragStartPos = useRef(0);
 
     const panResponder = useRef(
         PanResponder.create({
@@ -46,37 +51,24 @@ export default function SimpleColorPicker({ onSelectColor, initialColor }) {
             onMoveShouldSetPanResponder: () => true,
             onMoveShouldSetPanResponderCapture: () => true,
             onPanResponderGrant: (evt, gestureState) => {
-                updateColor(evt.nativeEvent.locationX);
+                // Initial touch: jump to that position
+                const locationX = evt.nativeEvent.locationX;
+                updateColor(locationX);
+                dragStartPos.current = locationX;
             },
             onPanResponderMove: (evt, gestureState) => {
-                // We need accumulation or absolute position relative to view
-                // locationX in move event might be relative to the marker if touched?
-                // Safer to rely on moveX but we need layout info.
-                // For simple slider, let's just use the dx accumulator + start
-                // Actually, easiest way for small slider:
-                // Just use locationX but handle bounds carefully.
-                // Or simpler: onPress/Drag on a parent container.
-                updateColor(evt.nativeEvent.locationX);
+                // Move relative to start position
+                // Clamping is handled in updateColor
+                updateColor(dragStartPos.current + gestureState.dx);
             },
             onPanResponderRelease: (evt, gestureState) => {
-                updateColor(evt.nativeEvent.locationX);
+                // Final update if needed, normally Move covers it
             }
         })
     ).current;
 
-    // Better Touch Handling:
-    // Using a simple touchable cover for "jump to"
-    // And standard slider logic usually needs exact coordinates.
-    // Let's stick to the previous simple 'onPress' but dragging is nicer.
-    // We'll calculate X based on the event.
-
-    const handleTouch = (evt) => {
-        updateColor(evt.nativeEvent.locationX);
-    }
-
     return (
         <View style={styles.container}>
-            <Text style={styles.label}>Select Custom Color</Text>
 
             {/* Selected Preview */}
             <View style={[styles.preview, { backgroundColor: selectedColor }]}>
@@ -94,8 +86,7 @@ export default function SimpleColorPicker({ onSelectColor, initialColor }) {
                     {/* Touch Area */}
                     <View
                         style={styles.touchArea}
-                        onTouchStart={handleTouch}
-                        onTouchMove={handleTouch}
+                        {...panResponder.panHandlers}
                     >
                         {/* Marker Line */}
                         <View style={[styles.marker, { left: markerPosition - 10 }]} pointerEvents="none">

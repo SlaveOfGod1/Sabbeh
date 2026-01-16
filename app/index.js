@@ -11,7 +11,7 @@ import SettingsModal from '../components/SettingsModal';
 
 export default function MainScreen() {
     const navigation = useNavigation();
-    const { currentDhikr, count, rounds, updateProgress, resetCount, theme, setTheme, THEMES, applyCustomColor, toggleNightMode } = useDhikr();
+    const { currentDhikr, count, rounds, updateProgress, resetCount, theme, setTheme, THEMES, applyCustomColor, toggleNightMode, i18n } = useDhikr();
 
     const [themeModalVisible, setThemeModalVisible] = useState(false);
     const [settingsModalVisible, setSettingsModalVisible] = useState(false);
@@ -24,6 +24,9 @@ export default function MainScreen() {
 
     const renderThemeButton = (key, themeOption) => {
         const isActive = theme.name === themeOption.name;
+        // Translate theme name
+        const displayName = i18n('t_' + themeOption.name.toLowerCase()) || themeOption.name;
+
         return (
             <TouchableOpacity
                 key={key}
@@ -35,7 +38,7 @@ export default function MainScreen() {
                 onPress={() => setTheme(themeOption)}
             >
                 <View style={[styles.themePreview, { backgroundColor: themeOption.colors[1] }]} />
-                <Text style={[styles.themeName, theme.isDark && { color: '#B0BEC5' }]}>{themeOption.name}</Text>
+                <Text style={[styles.themeName, theme.isDark && { color: '#B0BEC5' }]}>{displayName}</Text>
             </TouchableOpacity>
         );
     };
@@ -43,6 +46,35 @@ export default function MainScreen() {
     const handleApplyCustom = () => {
         applyCustomColor(tempColor);
         setThemeModalVisible(false); // Close after apply
+    };
+
+    // Helper to get translated title
+    const getDhikrTitle = (dhikr) => {
+        if (dhikr.nameKey) return i18n(dhikr.nameKey);
+        // Fallback for existing data using ID
+        switch (dhikr.id) {
+            case '1': return i18n('d_tasbih');
+            case '2': return i18n('d_tahmid');
+            case '3': return i18n('d_takbir');
+            case '4': return i18n('d_istighfar');
+            case '5': return i18n('d_salawat');
+            case '6': return i18n('d_tahlil');
+            default: return dhikr.title;
+        }
+    };
+
+    const getDhikrSubtitle = (dhikr) => {
+        if (dhikr.subtitleKey) return i18n(dhikr.subtitleKey);
+        // Fallback for existing data using ID
+        switch (dhikr.id) {
+            case '1': return i18n('s_tasbih');
+            case '2': return i18n('s_tahmid');
+            case '3': return i18n('s_takbir');
+            case '4': return i18n('s_istighfar');
+            case '5': return i18n('s_salawat');
+            case '6': return i18n('s_tahlil');
+            default: return dhikr.subtitle;
+        }
     };
 
     return (
@@ -72,12 +104,12 @@ export default function MainScreen() {
             </View>
 
             <View style={styles.centerContent}>
-                <Text style={styles.title}>{currentDhikr.title}</Text>
+                <Text style={styles.title}>{getDhikrTitle(currentDhikr)}</Text>
 
                 <View style={styles.subtitleRow}>
-                    <Text style={[styles.subtitle, { color: '#E0F2F1' }]}>{currentDhikr.subtitle}</Text>
+                    <Text style={[styles.subtitle, { color: '#E0F2F1' }]}>{getDhikrSubtitle(currentDhikr)}</Text>
                     <View style={styles.roundsBadge}>
-                        <Text style={styles.roundsText}>Round: {rounds}</Text>
+                        <Text style={styles.roundsText}>{i18n('rounds')}: {rounds}</Text>
                     </View>
                 </View>
 
@@ -103,7 +135,7 @@ export default function MainScreen() {
                         <View style={styles.modalHandle} />
                         <View style={styles.modalHeader}>
                             <Ionicons name="color-palette-outline" size={20} color={theme.isDark ? '#ECEFF1' : '#37474F'} />
-                            <Text style={[styles.modalTitle, theme.isDark && { color: '#ECEFF1' }]}>Color Themes</Text>
+                            <Text style={[styles.modalTitle, theme.isDark && { color: '#ECEFF1' }]}>{i18n('theme')}</Text>
                         </View>
 
                         <View style={styles.themesGrid}>
@@ -112,7 +144,7 @@ export default function MainScreen() {
                                 .map(([key, themeOption]) => renderThemeButton(key, themeOption))}
                         </View>
 
-                        <Text style={[styles.sectionTitle, theme.isDark && { color: '#ECEFF1' }]}>Custom Color</Text>
+                        <Text style={[styles.sectionTitle, theme.isDark && { color: '#ECEFF1' }]}>{i18n('customColor')}</Text>
                         <View style={styles.customPickerContainer}>
                             <SimpleColorPicker
                                 initialColor={tempColor}
@@ -120,7 +152,7 @@ export default function MainScreen() {
                             />
 
                             <TouchableOpacity style={styles.applyButton} onPress={handleApplyCustom}>
-                                <Text style={styles.applyButtonText}>Apply Custom Color</Text>
+                                <Text style={styles.applyButtonText}>{i18n('save')}</Text>
                             </TouchableOpacity>
                         </View>
 
