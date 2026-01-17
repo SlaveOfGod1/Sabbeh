@@ -125,10 +125,18 @@ export default function SettingsModal({ visible, onClose }) {
                             {/* GitHub Footer */}
                             <TouchableOpacity
                                 style={styles.githubButton}
-                                onPress={() => Linking.openURL('https://github.com/StartYourProject/Sabbeh')}
+                                onPress={() => Linking.openURL('https://github.com/SlaveOfGod1/Sabbeh')}
                             >
                                 <Ionicons name="logo-github" size={24} color={subTextColor} />
                                 <Text style={[styles.githubText, { color: subTextColor }]}>{i18n('github')}</Text>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity
+                                style={styles.githubButton}
+                                onPress={() => Linking.openURL('https://github.com/SlaveOfGod1/Sabbeh/issues')}
+                            >
+                                <Ionicons name="bug-outline" size={24} color={subTextColor} />
+                                <Text style={[styles.githubText, { color: subTextColor }]}>{i18n('reportBug')}</Text>
                             </TouchableOpacity>
 
                             {/* Reset Data Button */}

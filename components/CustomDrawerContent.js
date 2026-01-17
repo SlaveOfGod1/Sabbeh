@@ -172,7 +172,7 @@ export default function CustomDrawerContent(props) {
             />
 
             {/* Footer */}
-            <View style={[styles.footer, { paddingBottom: bottom + 13, borderColor: theme.isDark ? '#37474F' : '#EEEEEE' }]}>
+            <View style={[styles.footer, { paddingBottom: bottom + 10, borderColor: theme.isDark ? '#37474F' : '#EEEEEE' }]}>
                 <TouchableOpacity style={[styles.addButton, theme.isDark && { borderColor: '#546E7A', backgroundColor: '#37474F' }]} onPress={openAddModal}>
                     <Text style={[styles.addButtonText, theme.isDark && { color: '#B0BEC5' }]}>+ {i18n('addDhikr')}</Text>
                 </TouchableOpacity>
