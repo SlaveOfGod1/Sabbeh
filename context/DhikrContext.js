@@ -3,7 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as FileSystem from 'expo-file-system/legacy';
 import * as Sharing from 'expo-sharing';
 import * as DocumentPicker from 'expo-document-picker';
-import { Alert, Platform, I18nManager } from 'react-native';
+import { Alert, Platform } from 'react-native';
 import { TRANSLATIONS } from '../constants/constants';
 
 const DhikrContext = createContext();

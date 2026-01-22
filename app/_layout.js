@@ -2,6 +2,11 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Drawer } from 'expo-router/drawer';
 import CustomDrawerContent from '../components/CustomDrawerContent';
 import { DhikrProvider } from '../context/DhikrContext';
+import { I18nManager } from 'react-native';
+
+// Force LTR layout regardless of device language
+I18nManager.allowRTL(false);
+I18nManager.forceRTL(false);
 
 export default function Layout() {
     return (
