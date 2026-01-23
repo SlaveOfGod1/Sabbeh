@@ -59,9 +59,9 @@
 ## � لقطات الشاشة
 
 <div align="center">
-  <img src="./SC1.jpg" width="250" alt="الشاشة الرئيسية" />
-  <img src="./SC2.jpg" width="250" alt="القائمة الجانبية" />
-  <img src="./SC3.jpg" width="250" alt="تغير اللون" />
+  <img src="%E2%80%AASC1.jpg" width="250" alt="الشاشة الرئيسية" />
+  <img src="%E2%80%AASC2.jpg" width="250" alt="القائمة الجانبية" />
+  <img src="%E2%80%AASC3.jpg" width="250" alt="تغير اللون" />
 </div>
 
 ---
@@ -136,4 +136,5 @@
 </div>
 
 </div>
+
 
