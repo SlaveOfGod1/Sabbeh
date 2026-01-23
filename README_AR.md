@@ -11,6 +11,7 @@
 *مجانية وبدون إعلانات أو متتبعات. صُنعت خالصة لوجه الله.*
 
 [![GitHub](https://img.shields.io/badge/GitHub-SlaveOfGod1-blue?logo=github)](https://github.com/SlaveOfGod1/Sabbeh)
+[![License](https://img.shields.io/badge/License-Personal%20Use%20Only-red)](./LICENSE.md)
 
 [English](./README.md)
 
@@ -58,7 +59,17 @@
 
 ---
 
-## 🚀 البدء
+## � لقطات الشاشة
+
+<div align="center">
+  <img src="./SC1.jpg" width="250" alt="الشاشة الرئيسية" />
+  <img src="./SC2.jpg" width="250" alt="القائمة الجانبية" />
+  <img src="./SC3.jpg" width="250" alt="تغير اللون" />
+</div>
+
+---
+
+## �🚀 البدء
 
 ### المتطلبات
 - [Node.js](https://nodejs.org/) (الإصدار 18 أو أعلى)

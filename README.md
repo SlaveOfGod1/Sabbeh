@@ -9,7 +9,7 @@
 *Free of Ads and Trackers. Made for the sake of Allah.*
 
 [![GitHub](https://img.shields.io/badge/GitHub-SlaveOfGod1-blue?logo=github)](https://github.com/SlaveOfGod1/Sabbeh)
-[![License](https://img.shields.io/badge/License-Open%20Source-green)]()
+[![License](https://img.shields.io/badge/License-Personal%20Use%20Only-red)](./LICENSE.md)
 
 [عربي](./README_AR.md)
 
@@ -59,7 +59,11 @@ Fully translated in 7 languages:
 
 ## 📱 Screenshots
 
-*Coming soon*
+<div align="center">
+  <img src="./SC1.jpg" width="250" alt="Main Screen" />
+  <img src="./SC2.jpg" width="250" alt="Drawer Menu" />
+  <img src="./SC3.jpg" width="250" alt="Changing Color" />
+</div>
 
 ---
 
