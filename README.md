@@ -60,9 +60,9 @@ Fully translated in 7 languages:
 ## 📱 Screenshots
 
 <div align="center">
-  <img src="SC1.jpg" width="250" alt="Main Screen" />
+  <img src="%E2%80%AASC1.jpg" width="250" alt="Main Screen" />
   <img src="%E2%80%AASC2.jpg" width="250" alt="Drawer Menu" />
-  <img src="SC3.jpg" width="250" alt="Changing Color" />
+  <img src="%E2%80%AASC3.jpg" width="250" alt="Changing Color" />
 </div>
 
 ---
@@ -159,6 +159,7 @@ May Allah accept this work and make it beneficial for the Ummah.
 **Made for the sake of Allah**
 
 </div>
+
 
 
 
