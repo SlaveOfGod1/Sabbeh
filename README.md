@@ -9,7 +9,7 @@
 *Free of Ads and Trackers. Made for the sake of Allah.*
 
 [![GitHub](https://img.shields.io/badge/GitHub-SlaveOfGod1-blue?logo=github)](https://github.com/SlaveOfGod1/Sabbeh)
-[![License](https://img.shields.io/badge/License-Open%20Source-green)]()
+[![License](https://img.shields.io/badge/License-Personal%20Use%20Only-red)](./LICENSE.md)
 
 [عربي](./README_AR.md)
 
@@ -155,3 +155,4 @@ May Allah accept this work and make it beneficial for the Ummah.
 **Made for the sake of Allah**
 
 </div>
+
