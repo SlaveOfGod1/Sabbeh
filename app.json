@@ -1,0 +1,60 @@
+{
+  "expo": {
+    "name": "Sabbeh",
+    "slug": "Sabbeh",
+    "version": "1.0.0",
+    "scheme": "sabbeh",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "splash": {
+        "image": "./assets/splash-icon.png",
+        "resizeMode": "contain",
+        "backgroundColor": "#ffffff",
+        "dark": {
+          "image": "./assets/splash-icon-dark.png",
+          "resizeMode": "contain",
+          "backgroundColor": "#000000"
+        }
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "edgeToEdgeEnabled": true,
+      "splash": {
+        "image": "./assets/splash-icon.png",
+        "resizeMode": "contain",
+        "backgroundColor": "#ffffff",
+        "dark": {
+          "image": "./assets/splash-icon-dark.png",
+          "resizeMode": "contain",
+          "backgroundColor": "#000000"
+        }
+      },
+      "package": "com.Sabbeh"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-router"
+    ],
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "8b3cc405-1ea7-47c0-9fba-038d46f54e3b"
+      }
+    }
+  }
+}
