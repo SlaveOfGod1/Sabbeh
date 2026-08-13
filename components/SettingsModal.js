@@ -1,10 +1,10 @@
-import { View, Text, StyleSheet, Modal, TouchableOpacity, Linking, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, Modal, TouchableOpacity, Linking, ScrollView, Switch } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useDhikr } from '../context/DhikrContext';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function SettingsModal({ visible, onClose }) {
-    const { theme, exportProfile, importProfile, i18n, language, setLanguage, resetAppData } = useDhikr();
+    const { theme, exportProfile, importProfile, i18n, language, setLanguage, resetAppData, hapticEnabled, setHapticEnabled, autoAdvanceEnabled, setAutoAdvanceEnabled } = useDhikr();
     const insets = useSafeAreaInsets();
 
     const primaryColor = theme.colors[1] || '#00897B';
@@ -73,6 +73,40 @@ export default function SettingsModal({ visible, onClose }) {
                                         </Text>
                                     </TouchableOpacity>
                                 ))}
+                            </View>
+                        </View>
+
+                        {/* Haptic Feedback Section */}
+                        <View style={styles.section}>
+                            <View style={styles.sectionHeader}>
+                                <Ionicons name="phone-portrait-outline" size={20} color={textColor} />
+                                <Text style={[styles.sectionTitle, { color: textColor }]}>{i18n('hapticFeedback')}</Text>
+                            </View>
+                            <View style={[styles.card, { backgroundColor: cardColor, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }]}>
+                                <Text style={[styles.hapticDesc, { color: subTextColor }]}>{i18n('hapticFeedbackDesc')}</Text>
+                                <Switch
+                                    value={hapticEnabled}
+                                    onValueChange={setHapticEnabled}
+                                    trackColor={{ false: (isDark ? '#455A64' : '#CFD8DC'), true: primaryColor }}
+                                    thumbColor="#fff"
+                                />
+                            </View>
+                        </View>
+
+                        {/* Auto-advance Section */}
+                        <View style={styles.section}>
+                            <View style={styles.sectionHeader}>
+                                <Ionicons name="swap-horizontal-outline" size={20} color={textColor} />
+                                <Text style={[styles.sectionTitle, { color: textColor }]}>{i18n('autoAdvance')}</Text>
+                            </View>
+                            <View style={[styles.card, { backgroundColor: cardColor, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }]}>
+                                <Text style={[styles.hapticDesc, { color: subTextColor }]}>{i18n('autoAdvanceDesc')}</Text>
+                                <Switch
+                                    value={autoAdvanceEnabled}
+                                    onValueChange={setAutoAdvanceEnabled}
+                                    trackColor={{ false: (isDark ? '#455A64' : '#CFD8DC'), true: primaryColor }}
+                                    thumbColor="#fff"
+                                />
                             </View>
                         </View>
 
@@ -201,6 +235,12 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold',
         marginBottom: 8,
+    },
+    hapticDesc: {
+        fontSize: 14,
+        lineHeight: 20,
+        flex: 1,
+        marginRight: 15,
     },
     appDesc: {
         fontSize: 14,

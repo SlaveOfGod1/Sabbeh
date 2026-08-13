@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, FlatList, Modal, TextInput, Alert } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, FlatList, Modal, TextInput, Alert, KeyboardAvoidingView, Platform, Keyboard } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useDhikr } from '../context/DhikrContext';
 
@@ -100,7 +100,7 @@ export default function CustomDrawerContent(props) {
 
     const saveDhikr = () => {
         if (!title.trim()) {
-            Alert.alert(i18n('error'), "Please enter a name for the Dhikr");
+            Alert.alert(i18n('error'), i18n('nameRequired'));
             return;
         }
 
@@ -232,15 +232,20 @@ export default function CustomDrawerContent(props) {
                 transparent={true}
                 visible={modalVisible}
                 onRequestClose={() => setModalVisible(false)}
+                androidWindowSoftInputMode="adjustResize"
             >
-                <View style={styles.centeredView}>
+                <KeyboardAvoidingView
+                    style={styles.centeredView}
+                    behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+                    keyboardVerticalOffset={Platform.OS === 'ios' ? 60 : 0}
+                >
                     <View style={[styles.modalView, theme.isDark && { backgroundColor: '#37474F' }]}>
                         <Text style={[styles.modalTitle, { color: theme.isDark ? '#ECEFF1' : primaryColor }]}>{editingId ? i18n('editDhikr') : i18n('addDhikr')}</Text>
 
                         <Text style={[styles.inputLabel, theme.isDark && { color: '#B0BEC5' }]}>{i18n('title')}</Text>
                         <TextInput
                             style={[styles.input, theme.isDark && { backgroundColor: '#455A64', borderColor: '#546E7A', color: '#fff' }]}
-                            placeholder="e.g. Salawat"
+                            placeholder={i18n('phTitle')}
                             placeholderTextColor={theme.isDark ? '#90A4AE' : '#999'}
                             value={title}
                             onChangeText={setTitle}
@@ -249,10 +254,11 @@ export default function CustomDrawerContent(props) {
                         <Text style={[styles.inputLabel, theme.isDark && { color: '#B0BEC5' }]}>{i18n('subtitle')}</Text>
                         <TextInput
                             style={[styles.input, theme.isDark && { backgroundColor: '#455A64', borderColor: '#546E7A', color: '#fff' }]}
-                            placeholder="e.g. Allahumma salli ala..."
+                            placeholder={i18n('phSubtitle')}
                             placeholderTextColor={theme.isDark ? '#90A4AE' : '#999'}
                             value={subtitle}
                             onChangeText={setSubtitle}
+                            onSubmitEditing={Keyboard.dismiss}
                         />
 
                         <Text style={[styles.inputLabel, theme.isDark && { color: '#B0BEC5' }]}>{i18n('target')}</Text>
@@ -263,6 +269,7 @@ export default function CustomDrawerContent(props) {
                             value={target}
                             onChangeText={setTarget}
                             keyboardType="numeric"
+                            onSubmitEditing={Keyboard.dismiss}
                         />
 
                         <View style={styles.modalButtons}>
@@ -280,7 +287,7 @@ export default function CustomDrawerContent(props) {
                             </TouchableOpacity>
                         </View>
                     </View>
-                </View>
+                </KeyboardAvoidingView>
             </Modal>
 
         </View>

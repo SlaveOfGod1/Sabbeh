@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, FlatList } from 'react-native';
+import { useDhikr } from '../context/DhikrContext';
 
 const MOCK_SESSIONS = [
     { id: '1', date: '2023-10-27', count: 33, label: 'After Maghrib' },
@@ -9,9 +10,10 @@ const MOCK_SESSIONS = [
 ];
 
 export default function SessionsScreen() {
+    const { i18n } = useDhikr();
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Praying Sessions</Text>
+            <Text style={styles.title}>{i18n('prayingSessions')}</Text>
             <FlatList
                 data={MOCK_SESSIONS}
                 keyExtractor={(item) => item.id}
@@ -22,7 +24,7 @@ export default function SessionsScreen() {
                             <Text style={styles.cardTitle}>{item.label}</Text>
                             <Text style={styles.cardDate}>{item.date}</Text>
                         </View>
-                        <Text style={styles.count}>{item.count} Tasbihs</Text>
+                        <Text style={styles.count}>{item.count} {i18n('countUnit')}</Text>
                     </View>
                 )}
             />

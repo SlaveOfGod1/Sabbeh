@@ -155,6 +155,7 @@ export default function MainScreen() {
                                 <Text style={styles.applyButtonText}>{i18n('save')}</Text>
                             </TouchableOpacity>
                         </View>
+                        <View style={{ height: 25 }} />
 
                     </TouchableOpacity>
                 </TouchableOpacity>

@@ -1,8 +1,10 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useDhikr } from '../context/DhikrContext';
 
 export default function CounterDisplay({ count }) {
+    const { i18n } = useDhikr();
     // Pad count with zeros to look like 000
     const formattedCount = String(count).padStart(3, '0');
 
@@ -14,15 +16,15 @@ export default function CounterDisplay({ count }) {
                 end={{ x: 0.5, y: 0.5 }} // Dark Blue Grey to almost Black gradient
                 style={styles.housingGradient}
             >
-                <Text style={styles.topLabel}>Total Count</Text>
+                <Text style={styles.topLabel}>{i18n('totalCount')}</Text>
 
                 <View style={styles.lcdScreen}>
                     <Text style={styles.countText}>{formattedCount}</Text>
                 </View>
 
                 <View style={styles.labelsRow}>
-                    <Text style={styles.subLabel}>COUNT</Text>
-                    <Text style={styles.subLabel}>RESET</Text>
+                    <Text style={styles.subLabel}>{i18n('countLabel')}</Text>
+                    <Text style={styles.subLabel}>{i18n('resetLabel')}</Text>
                 </View>
             </LinearGradient>
         </View>

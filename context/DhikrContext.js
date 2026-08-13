@@ -4,6 +4,7 @@ import * as FileSystem from 'expo-file-system/legacy';
 import * as Sharing from 'expo-sharing';
 import * as DocumentPicker from 'expo-document-picker';
 import { Alert, Platform } from 'react-native';
+import * as Haptics from 'expo-haptics';
 import { TRANSLATIONS } from '../constants/constants';
 
 const DhikrContext = createContext();
@@ -41,6 +42,8 @@ export function DhikrProvider({ children }) {
     const [progress, setProgress] = useState({});
     const [theme, setTheme] = useState(THEMES.Teal);
     const [language, setLanguage] = useState('en');
+    const [hapticEnabled, setHapticEnabled] = useState(true);
+    const [autoAdvanceEnabled, setAutoAdvanceEnabled] = useState(false);
 
     // i18n Helper
     const i18n = (key) => {
@@ -54,7 +57,7 @@ export function DhikrProvider({ children }) {
 
     useEffect(() => {
         saveData();
-    }, [dhikrs, progress, currentDhikrId, theme, language]);
+    }, [dhikrs, progress, currentDhikrId, theme, language, hapticEnabled, autoAdvanceEnabled]);
 
     const loadData = async () => {
         try {
@@ -66,6 +69,8 @@ export function DhikrProvider({ children }) {
                 if (parsed.currentDhikrId) setCurrentDhikrId(parsed.currentDhikrId);
                 if (parsed.theme) setTheme(parsed.theme);
                 if (parsed.language) setLanguage(parsed.language);
+                if (typeof parsed.hapticEnabled === 'boolean') setHapticEnabled(parsed.hapticEnabled);
+                if (typeof parsed.autoAdvanceEnabled === 'boolean') setAutoAdvanceEnabled(parsed.autoAdvanceEnabled);
             }
         } catch (e) {
             console.log('Failed to load dhikr data');
@@ -79,7 +84,9 @@ export function DhikrProvider({ children }) {
                 progress,
                 currentDhikrId,
                 theme,
-                language
+                language,
+                hapticEnabled,
+                autoAdvanceEnabled
             };
             await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(data));
         } catch (e) {
@@ -106,6 +113,21 @@ export function DhikrProvider({ children }) {
         if (newCount >= target) {
             newCount = 0;
             newRounds += 1;
+            if (hapticEnabled) {
+                // Keep vibrating for about half a second by repeating the
+                // haptic tick at short intervals
+                for (let i = 0; i < 9; i++) {
+                    setTimeout(() => {
+                        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+                    }, i * 60);
+                }
+            }
+
+            if (autoAdvanceEnabled && dhikrs.length > 1) {
+                const idx = dhikrs.findIndex(d => d.id === currentId);
+                const next = dhikrs[(idx + 1) % dhikrs.length];
+                setCurrentDhikrId(next.id);
+            }
         }
 
         setProgress({
@@ -251,7 +273,7 @@ export function DhikrProvider({ children }) {
                         Alert.alert(i18n('success'), i18n('exported'), [{ text: i18n('ok') }]);
                         return; // Exit if SAF successful
                     } else {
-                        Alert.alert(i18n('error'), "Permission to save file was denied.");
+                        Alert.alert(i18n('error'), i18n('permissionDenied'));
                         return;
                     }
                 } catch (safError) {
@@ -272,11 +294,11 @@ export function DhikrProvider({ children }) {
                     UTI: 'public.json'
                 });
             } else {
-                Alert.alert(i18n('error'), "Sharing is not available on this device");
+                Alert.alert(i18n('error'), i18n('sharingUnavailable'));
             }
         } catch (error) {
             console.error("Export Error:", error);
-            Alert.alert(i18n('error'), "Failed to export profile");
+            Alert.alert(i18n('error'), i18n('exportFailed'));
         }
     };
 
@@ -297,20 +319,21 @@ export function DhikrProvider({ children }) {
                         const data = JSON.parse(text);
 
                         if (!data.dhikrs || !data.progress) {
-                            alert("Invalid File: This does not look like a valid Sabbeh profile.");
+                            alert(i18n('invalidProfile'));
                             return;
                         }
 
-                        if (confirm("Import Profile: This will replace your current dhikrs and progress. Are you sure?")) {
+                        const message = `${i18n('importProfile')}: ${i18n('confirmImport')}`;
+                        if (confirm(message)) {
                             setDhikrs(data.dhikrs);
                             setProgress(data.progress);
                             if (data.currentDhikrId) setCurrentDhikrId(data.currentDhikrId);
                             if (data.theme) setTheme(data.theme);
-                            alert("Profile imported successfully!");
+                            alert(i18n('imported'));
                         }
                     } catch (err) {
                         console.error("Web parsing error", err);
-                        alert("Failed to parse file");
+                        alert(i18n('parseFailed'));
                     }
                 };
                 input.click();
@@ -331,7 +354,7 @@ export function DhikrProvider({ children }) {
             const data = JSON.parse(fileContent);
 
             if (!data.dhikrs || !data.progress) {
-                Alert.alert(i18n('error'), "This does not look like a valid Sabbeh profile.");
+                Alert.alert(i18n('error'), i18n('invalidProfile'));
                 return;
             }
 
@@ -366,7 +389,7 @@ export function DhikrProvider({ children }) {
 
         } catch (error) {
             console.error("Import Error:", error);
-            Alert.alert(i18n('error'), "Could not parse the profile file.");
+            Alert.alert(i18n('error'), i18n('parseFailed'));
         }
     };
 
@@ -386,9 +409,11 @@ export function DhikrProvider({ children }) {
                             setProgress({});
                             setCurrentDhikrId('1');
                             setTheme(THEMES.Teal);
+                            setHapticEnabled(true);
+                            setAutoAdvanceEnabled(false);
                             Alert.alert(i18n('success'), i18n('resetDataDesc'), [{ text: i18n('ok') }]);
                         } catch (e) {
-                            Alert.alert(i18n('error'), "Failed to reset data");
+                            Alert.alert(i18n('error'), i18n('resetFailed'));
                         }
                     }
                 }
@@ -418,7 +443,11 @@ export function DhikrProvider({ children }) {
             THEMES,
             language,
             setLanguage,
-            i18n
+            i18n,
+            hapticEnabled,
+            setHapticEnabled,
+            autoAdvanceEnabled,
+            setAutoAdvanceEnabled
         }}>
             {children}
         </DhikrContext.Provider>
