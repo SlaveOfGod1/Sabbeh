@@ -23,11 +23,13 @@
 - Large, easy-to-read digital display
 - Track rounds automatically when target is reached
 - Reset counter with one tap
+- **Haptic Feedback**: Optional vibration when a round is completed (toggleable in Settings)
 
 ### 📿 Dhikr Sessions
 - **Custom Dhikrs**: Add your own dhikrs with custom titles and targets
 - **Edit & Delete**: Long-press any dhikr to modify or remove it
 - Progress saved for each dhikr session
+- **Auto-advance**: Optionally switch to the next dhikr automatically after completing a round (toggleable in Settings)
 
 ### 🎨 Themes & Customization
 - **4 Preset Themes**: Teal, Purple, Blue, Rose
