@@ -122,7 +122,7 @@ export default function SettingsModal({ visible, onClose }) {
                                 <Text style={[styles.appDesc, { color: subTextColor }]}>
                                     {i18n('appDesc')}
                                 </Text>
-                                <Text style={[styles.version, { color: subTextColor }]}>Version 1.0.0</Text>
+                                <Text style={[styles.version, { color: subTextColor }]}>Version 1.0.1</Text>
                             </View>
                         </View>
 

@@ -12,13 +12,16 @@ const DhikrContext = createContext();
 const STORAGE_KEY = '@sabbeh_dhikrs_v1';
 
 const INITIAL_DHIKRS = [
+    { id: '4', title: 'Istighfar', subtitle: 'Astaghfirullah', target: 100, nameKey: 'd_istighfar', subtitleKey: 's_istighfar' },
     { id: '1', title: 'Tasbih', subtitle: 'SubhanAllah', target: 33, nameKey: 'd_tasbih', subtitleKey: 's_tasbih' },
     { id: '2', title: 'Tahmid', subtitle: 'Alhamdulillah', target: 33, nameKey: 'd_tahmid', subtitleKey: 's_tahmid' },
     { id: '3', title: 'Takbir', subtitle: 'Allahu Akbar', target: 34, nameKey: 'd_takbir', subtitleKey: 's_takbir' },
-    { id: '4', title: 'Istighfar', subtitle: 'Astaghfirullah', target: 100, nameKey: 'd_istighfar', subtitleKey: 's_istighfar' },
     { id: '5', title: 'Salawat', subtitle: 'Salawat on Prophet', target: 100, nameKey: 'd_salawat', subtitleKey: 's_salawat' },
     { id: '6', title: 'La ilaha illallah', subtitle: 'Tahlil', target: 100, nameKey: 'd_tahlil', subtitleKey: 's_tahlil' },
 ];
+
+// Desired display order for the built-in dhikrs
+const DEFAULT_ORDER = ['4', '1', '2', '3', '5', '6'];
 
 // Theme Presets
 const THEMES = {
@@ -64,7 +67,19 @@ export function DhikrProvider({ children }) {
             const stored = await AsyncStorage.getItem(STORAGE_KEY);
             if (stored) {
                 const parsed = JSON.parse(stored);
-                if (parsed.dhikrs) setDhikrs(parsed.dhikrs);
+                if (parsed.dhikrs) {
+                    // Put the built-in dhikrs in the default order, keeping any
+                    // custom dhikrs after them in their existing relative order
+                    const defaultIdSet = new Set(DEFAULT_ORDER);
+                    const defaults = [];
+                    const customs = [];
+                    parsed.dhikrs.forEach(d => {
+                        if (defaultIdSet.has(d.id)) defaults.push(d);
+                        else customs.push(d);
+                    });
+                    defaults.sort((a, b) => DEFAULT_ORDER.indexOf(a.id) - DEFAULT_ORDER.indexOf(b.id));
+                    setDhikrs([...defaults, ...customs]);
+                }
                 if (parsed.progress) setProgress(parsed.progress);
                 if (parsed.currentDhikrId) setCurrentDhikrId(parsed.currentDhikrId);
                 if (parsed.theme) setTheme(parsed.theme);
@@ -234,7 +249,7 @@ export function DhikrProvider({ children }) {
     const exportProfile = async () => {
         try {
             const profileData = {
-                version: '1.0.0',
+                version: '1.0.1',
                 timestamp: new Date().toISOString(),
                 dhikrs,
                 progress,

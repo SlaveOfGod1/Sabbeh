@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, Text, Platform, StatusBar, Modal, TouchableOpacity } from 'react-native';
+import React, { useState, useRef } from 'react';
+import { View, StyleSheet, Text, Platform, StatusBar, Modal, TouchableOpacity, PanResponder } from 'react-native';
 import CounterDisplay from '../components/CounterDisplay';
 import CounterControls from '../components/CounterControls';
 import { useNavigation } from 'expo-router';
@@ -18,6 +18,21 @@ export default function MainScreen() {
 
     // Initial color for picker
     const [tempColor, setTempColor] = useState('#42A5F5');
+
+    // Drag handle: tap or drag down to close the theme modal
+    const handleDrag = useRef(
+        PanResponder.create({
+            onStartShouldSetPanResponder: () => true,
+            onMoveShouldSetPanResponder: (evt, gestureState) => Math.abs(gestureState.dy) > 5,
+            onPanResponderRelease: (evt, gestureState) => {
+                const draggedDown = gestureState.dy > 60;
+                const tapped = Math.abs(gestureState.dy) < 8 && Math.abs(gestureState.dx) < 8;
+                if (draggedDown || tapped) {
+                    setThemeModalVisible(false);
+                }
+            },
+        })
+    ).current;
 
     // Use theme color for icons (darker shade usually at index 1)
     const primaryColor = theme.colors[1] || '#00897B';
@@ -132,7 +147,9 @@ export default function MainScreen() {
                     onPress={() => setThemeModalVisible(false)}
                 >
                     <TouchableOpacity activeOpacity={1} style={[styles.themeModal, { bottom: 0, backgroundColor: theme.isDark ? '#263238' : '#fff' }]}>
-                        <View style={styles.modalHandle} />
+                        <View style={styles.modalHandleContainer} {...handleDrag.panHandlers}>
+                            <View style={styles.modalHandle} />
+                        </View>
                         <View style={styles.modalHeader}>
                             <Ionicons name="color-palette-outline" size={20} color={theme.isDark ? '#ECEFF1' : '#37474F'} />
                             <Text style={[styles.modalTitle, theme.isDark && { color: '#ECEFF1' }]}>{i18n('theme')}</Text>
@@ -271,7 +288,12 @@ const styles = StyleSheet.create({
         backgroundColor: '#CFD8DC',
         borderRadius: 2,
         alignSelf: 'center',
-        marginBottom: 20,
+    },
+    modalHandleContainer: {
+        alignSelf: 'center',
+        paddingVertical: 8,
+        paddingHorizontal: 30,
+        marginBottom: 12,
     },
     modalHeader: {
         flexDirection: 'row',

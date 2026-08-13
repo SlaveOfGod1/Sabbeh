@@ -177,7 +177,7 @@ export default function CustomDrawerContent(props) {
                     <Text style={[styles.addButtonText, theme.isDark && { color: '#B0BEC5' }]}>+ {i18n('addDhikr')}</Text>
                 </TouchableOpacity>
                 <Text style={[styles.footerNote, theme.isDark && { color: '#90A4AE' }]}>{i18n('appName')}</Text>
-                <Text style={styles.footerSubNote}>v1.0.0</Text>
+                <Text style={styles.footerSubNote}>v1.0.1</Text>
             </View>
 
             {/* Modal for Options (Edit/Delete) */}

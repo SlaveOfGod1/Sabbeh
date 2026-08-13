@@ -3,17 +3,41 @@ import { View, StyleSheet, TouchableOpacity, Text, Dimensions, PanResponder } fr
 import { LinearGradient } from 'expo-linear-gradient';
 
 export default function SimpleColorPicker({ onSelectColor, initialColor }) {
-    // Default to middle (Cyan-ish) if no valid initialColor logic 
-    // This solves the user request to have the selector in the middle by default
     const sliderWidth = 300;
     const [hue, setHue] = useState(180);
     const [selectedColor, setSelectedColor] = useState(initialColor || '#2EADB3'); // Dimmer Cyan match for 180, 60, 45
     const [markerPosition, setMarkerPosition] = useState(sliderWidth / 2);
 
+    // Extract the hue of a hex color so the marker sits on the picked color
+    const hexToHue = (hex) => {
+        let h = String(hex || '').replace('#', '');
+        if (h.length === 8) h = h.slice(0, 6); // drop alpha channel
+        if (h.length !== 6) return 180;
+        const num = parseInt(h, 16);
+        const r = (num >> 16) & 0xFF;
+        const g = (num >> 8) & 0xFF;
+        const b = num & 0xFF;
+        const max = Math.max(r, g, b);
+        const min = Math.min(r, g, b);
+        let hueVal = 0;
+        if (max !== min) {
+            const d = max - min;
+            if (max === r) hueVal = ((g - b) / d) % 6;
+            else if (max === g) hueVal = (b - r) / d + 2;
+            else hueVal = (r - g) / d + 4;
+            hueVal *= 60;
+            if (hueVal < 0) hueVal += 360;
+        }
+        return Math.round(hueVal);
+    };
+
+    // Keep the marker positioned at the selected color whenever it changes
     useEffect(() => {
-        // Optional: Try to reverse engineer hex to hue position if needed, 
-        // but for simplicity we start at middle.
-    }, []);
+        const h = hexToHue(initialColor);
+        setHue(h);
+        setMarkerPosition((h / 360) * sliderWidth);
+        setSelectedColor(initialColor || '#2EADB3');
+    }, [initialColor]);
 
     // Simple HSL to Hex conversion
     const hslToHex = (h, s, l) => {
