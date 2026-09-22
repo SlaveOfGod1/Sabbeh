@@ -1,114 +1,146 @@
-# Sabbeh — Digital Dhikr Counter
+# Sabbeh - Digital Dhikr Counter
 
-A beautiful native Android counter for your dhikr and prayers.
+<div align="center">
 
-*Free of ads and trackers. Made for the sake of Allah. Works fully offline.*
+![Sabbeh Logo](./app/src/main/res/drawable/app_icon.png)
 
-## Features
+**A beautiful native Android counter for your dhikr and prayers.**
 
-### Digital Counter
-- Large, easy-to-read display with automatic round tracking
-- One-tap reset
-- Haptic vibration when a round completes (toggleable in Settings)
+*Free of Ads and Trackers. Made for the sake of Allah.*
 
-### Dhikr Sessions
-- Custom dhikrs with your own titles and targets
-- Edit and delete any dhikr (long-press)
-- Progress saved per session
-- Optional auto-advance to the next dhikr after each round
+[![GitHub](https://img.shields.io/badge/GitHub-SlaveOfGod1-blue?logo=github)](https://github.com/SlaveOfGod1/Sabbeh)
+[![License](https://img.shields.io/badge/License-Personal%20Use%20Only-red)](./LICENSE.md)
 
-### Themes
-- 4 presets: Teal, Purple, Blue, Rose
-- Custom color picker (remembers your pick)
-- Night mode
+</div>
 
-### Languages
-English, العربية, Türkçe, 中文, Melayu, اردو, 日本語
+---
 
-### Profile Management
-- Export your data as a JSON backup file
-- Import a backup to restore
-- Reset all data
+## ✨ Features
 
-### Privacy
-No ads, no trackers, no data collection. Everything stays on your device.
+### 🔢 Digital Counter
+- Large, easy-to-read digital display
+- Track rounds automatically when target is reached
+- Reset counter with one tap
+- **Haptic Feedback**: Optional vibration when a round is completed (toggleable in Settings)
 
-## Build
+### 📿 Dhikr Sessions
+- **Custom Dhikrs**: Add your own dhikrs with custom titles and targets
+- **Edit & Delete**: Long-press any dhikr to modify or remove it
+- Progress saved for each dhikr session
+- **Auto-advance**: Optionally switch to the next dhikr automatically after completing a round (toggleable in Settings)
 
-No Android Studio and no Gradle required — just a JDK and the Android SDK
-command-line tools. Zero third-party dependencies.
+### 🎨 Themes & Customization
+- **4 Preset Themes**: Teal, Purple, Blue, Rose
+- **Custom Color Picker**: Choose any color you like, the app remembers it
+- **Night Mode**: Dark theme for comfortable use at night
 
-### 1. Requirements
-- JDK 17 or newer
-- Android SDK with: `cmdline-tools`, `platforms;android-34`,
-  `build-tools;34.0.0`, `platform-tools` (install via `sdkmanager`)
+### 🌍 Multi-Language Support
+Fully translated in 7 languages:
+- English
+- العربية (Arabic)
+- Türkçe (Turkish)
+- 中文 (Chinese)
+- Bahasa Melayu (Malay)
+- اردو (Urdu)
+- 日本語 (Japanese)
 
-### 2. One-time SDK setup
-```bat
-sdkmanager "platforms;android-34" "build-tools;34.0.0"
-```
+### 💾 Data Management
+- **Export Profile**: Save your data as a JSON file
+- **Import Profile**: Restore your data from a backup
+- **Reset Data**: Clear all data and start fresh
 
-### 3. Build the APK (Windows `cmd`, from the repo root)
-Set these to your own paths first:
-```bat
-set SDK=<path-to-android-sdk>
-set JDK=<path-to-jdk-21>
-set PROJ=%CD%
-set BT=%SDK%\build-tools\34.0.0
-set AJAR=%SDK%\platforms\android-34\android.jar
-mkdir "%PROJ%\build\flats" "%PROJ%\build\gen" "%PROJ%\build\obj" "%PROJ%\build\dex" "%PROJ%\build\apk"
-```
+### 🛡️ Privacy First
+- ✅ No Ads
+- ✅ No Trackers
+- ✅ No Data Collection
+- ✅ Works Offline
 
-Compile resources and link the base APK:
-```bat
-"%BT%\aapt2.exe" compile --dir "%PROJ%\app\src\main\res" -o "%PROJ%\build\flats"
-"%BT%\aapt2.exe" link -o "%PROJ%\build\apk\app-unaligned.apk" -I "%AJAR%" --manifest "%PROJ%\app\src\main\AndroidManifest.xml" --java "%PROJ%\build\gen" --auto-add-overlay --min-sdk-version 24 --target-sdk-version 34 --version-code 3 --version-name 1.0.2 -R "%PROJ%\build\flats\values_colors.arsc.flat" -R "%PROJ%\build\flats\values_strings.arsc.flat" -R "%PROJ%\build\flats\values_styles.arsc.flat"
-```
+---
 
-Compile, dex, pack, align and sign (password: `android`):
-```bat
-dir /s /b "%PROJ%\app\src\main\java\*.java" > "%PROJ%\build\sources.txt"
-```
-Quote each line of `sources.txt` and use forward slashes (javac argfile rules),
-then:
-```bat
-"%JDK%\bin\javac.exe" --release 8 -classpath "%AJAR%" -d "%PROJ%\build\obj" @"%PROJ%\build\sources.txt"
-"%JDK%\bin\jar.exe" cf "%PROJ%\build\classes.jar" -C "%PROJ%\build\obj" .
-"%JDK%\bin\java.exe" -classpath "%SDK%\cmdline-tools\latest\lib\d8-classpath.jar" com.android.tools.r8.D8 --lib "%AJAR%" --min-api 24 --output "%PROJ%\build\dex" "%PROJ%\build\classes.jar"
-cd /d "%PROJ%\build\dex"
-"%JDK%\bin\jar.exe" uf "%PROJ%\build\apk\app-unaligned.apk" classes.dex
-cd /d "%PROJ%"
-"%BT%\zipalign.exe" -f 4 "%PROJ%\build\apk\app-unaligned.apk" "%PROJ%\build\apk\app-aligned.apk"
-"%JDK%\bin\keytool.exe" -genkeypair -keystore "%PROJ%\debug.keystore" -alias sabbeh -keyalg RSA -keysize 2048 -validity 9125 -storepass android -keypass android -dname "CN=Sabbeh Debug"
-"%JDK%\bin\java.exe" -jar "%BT%\lib\apksigner.jar" sign --ks "%PROJ%\debug.keystore" --ks-pass pass:android --key-pass pass:android --out "%PROJ%\build\Sabbeh-debug.apk" "%PROJ%\build\apk\app-aligned.apk"
-```
+## 🚀 Getting Started
 
-The Ionicons font must be stored uncompressed under `assets/` (packed
-separately after linking). See the build notes above if you script this.
+### Prerequisites
+- [JDK](https://adoptium.net/) 17 or newer
+- Android SDK with `cmdline-tools`, `platforms;android-34`, `build-tools;34.0.0`, `platform-tools`
+- No Android Studio and no Gradle needed — zero third-party dependencies
 
-### 4. Install (phone with USB debugging enabled)
-```bat
-"%SDK%\platform-tools\adb.exe" install -r "%PROJ%\build\Sabbeh-debug.apk"
-```
+### Installation
 
-## Project Layout
+1. **Install the SDK packages (once)**
+   ```bat
+   sdkmanager "platforms;android-34" "build-tools;34.0.0"
+   ```
 
-```
-app/src/main/
-  AndroidManifest.xml
-  assets/fonts/Ionicons.ttf   # bundled icon font
-  java/com/sabbeh/
-    MainActivity.java         # counter UI, drawer, theme sheet, settings
-    data/DhikrStore.java      # state + persistence (SharedPreferences)
-    data/Themes.java          # theme presets + custom colors
-    data/Translations.java    # all 7 languages
-    models/Dhikr.java
-    views/                    # gradient, hue slider, flow layout, icons
-  res/                        # colors, styles, launcher icons
-```
+2. **Set your paths and compile the resources**
+   ```bat
+   set SDK=<path-to-android-sdk>
+   set JDK=<path-to-jdk>
+   set PROJ=%CD%
+   set BT=%SDK%\build-tools\34.0.0
+   set AJAR=%SDK%\platforms\android-34\android.jar
+   "%BT%\aapt2.exe" compile --dir "%PROJ%\app\src\main\res" -o "%PROJ%\build\flats"
+   "%BT%\aapt2.exe" link -o "%PROJ%\build\apk\app-unaligned.apk" -I "%AJAR%" --manifest "%PROJ%\app\src\main\AndroidManifest.xml" --java "%PROJ%\build\gen" --auto-add-overlay --min-sdk-version 24 --target-sdk-version 34 --version-code 3 --version-name 1.0.2 -R "%PROJ%\build\flats\values_colors.arsc.flat" -R "%PROJ%\build\flats\values_strings.arsc.flat" -R "%PROJ%\build\flats\values_styles.arsc.flat"
+   ```
 
-## License
+3. **Compile, dex, pack, align and sign**
+   ```bat
+   "%JDK%\bin\javac.exe" --release 8 -classpath "%AJAR%" -d "%PROJ%\build\obj" <your-sources>
+   "%JDK%\bin\jar.exe" cf "%PROJ%\build\classes.jar" -C "%PROJ%\build\obj" .
+   "%JDK%\bin\java.exe" -classpath "%SDK%\cmdline-tools\latest\lib\d8-classpath.jar" com.android.tools.r8.D8 --lib "%AJAR%" --min-api 24 --output "%PROJ%\build\dex" "%PROJ%\build\classes.jar"
+   "%BT%\zipalign.exe" -f 4 "%PROJ%\build\apk\app-unaligned.apk" "%PROJ%\build\apk\app-aligned.apk"
+   "%JDK%\bin\java.exe" -jar "%BT%\lib\apksigner.jar" sign --ks <your.keystore> --ks-pass pass:<password> --key-pass pass:<password> --out "%PROJ%\build\Sabbeh.apk" "%PROJ%\build\apk\app-aligned.apk"
+   ```
 
-Free for personal use only. See [LICENSE.md](./LICENSE.md).
-Commercial use, redistribution for profit, and store uploads for commercial
-purposes are prohibited.
+4. **Run on your device** (USB debugging enabled)
+   ```bat
+   "%SDK%\platform-tools\adb.exe" install -r "%PROJ%\build\Sabbeh.apk"
+   ```
+
+---
+
+## 🛠️ Tech Stack
+
+- **Java** - Native Android app, no frameworks
+- **Android SDK only** - aapt2, d8, apksigner, adb directly
+- **SharedPreferences** - Local data persistence
+- **Canvas gradients** - Theme backgrounds drawn at runtime
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Feel free to:
+- Report bugs via [GitHub Issues](https://github.com/SlaveOfGod1/Sabbeh/issues)
+- Submit pull requests
+- Suggest new features
+
+---
+
+## 📄 License
+
+This project is **free for personal use only**.
+
+> ⚠️ **IMPORTANT NOTICE**
+>
+> - ❌ **Commercial use is strictly prohibited**
+> - ❌ **Selling or redistributing this app for profit is not allowed**
+> - ❌ **Uploading to app stores for commercial purposes is forbidden**
+> - ✅ Personal use only
+>
+> **Violation of these terms will result in a DMCA takedown notice.**
+
+---
+
+## 🤲 Dua
+
+May Allah accept this work and make it beneficial for the Ummah.
+
+*اللهم تقبل منا إنك أنت السميع العليم*
+
+---
+
+<div align="center">
+
+**Made for the sake of Allah**
+
+</div>
