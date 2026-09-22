@@ -11,6 +11,8 @@
 [![GitHub](https://img.shields.io/badge/GitHub-SlaveOfGod1-blue?logo=github)](https://github.com/SlaveOfGod1/Sabbeh)
 [![License](https://img.shields.io/badge/License-Personal%20Use%20Only-red)](./LICENSE.md)
 
+[عربي](./README_AR.md)
+
 </div>
 
 ---
