@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Framework theme only: no external dependencies, works offline.
+         Transparent system bars; the activity lays out behind them via
+         SYSTEM_UI layout flags (resize/keyboard keeps working). -->
+    <style name="Theme.Sabbeh" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:windowBackground">@android:color/black</item>
+    </style>
+</resources>
