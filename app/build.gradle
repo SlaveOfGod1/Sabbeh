@@ -1,0 +1,36 @@
+apply plugin: 'com.android.application'
+
+android {
+    namespace 'com.sabbeh'
+    compileSdk 34
+
+    defaultConfig {
+        // Temporary debug id so it installs side-by-side with the
+        // store/Expo build (com.Sabbeh) already on the phone.
+        applicationId 'com.Sabbeh.debug'
+        minSdk 24
+        targetSdk 34
+        versionCode 3
+        versionName '1.0.2'
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+        debug {
+            minifyEnabled false
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+
+// Zero external dependencies on purpose: only the Android SDK + org.json
+// (which ships inside Android) are used, so the port keeps every feature
+// of the Expo app while working fully offline.
+dependencies {
+}

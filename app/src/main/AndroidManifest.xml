@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.Sabbeh.debug">
+
+    <!-- Vibrate when a round completes (toggleable in Settings, same as Expo Haptics) -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <application
+        android:label="Sabbeh"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="false"
+        android:allowBackup="true"
+        android:theme="@style/Theme.Sabbeh">
+        <activity
+            android:name="com.sabbeh.MainActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize"
+            android:configChanges="orientation|screenSize|keyboardHidden">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>

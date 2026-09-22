@@ -1,0 +1,7 @@
+// Top-level build file. No plugins are applied here on purpose:
+// the app module applies only the local Android Gradle Plugin already
+// installed with Android Studio, so nothing needs to be downloaded
+// beyond the normal SDK.
+
+// NOTE: First open this folder in Android Studio and let it sync.
+// Do NOT run any build until Android Studio has finished indexing.

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="teal_start">#4DB6AC</color>
+    <color name="teal_end">#00695C</color>
+    <color name="purple_start">#BA68C8</color>
+    <color name="purple_end">#4A148C</color>
+    <color name="blue_start">#42A5F5</color>
+    <color name="blue_end">#0D47A1</color>
+    <color name="rose_start">#EC407A</color>
+    <color name="rose_end">#880E4F</color>
+    <color name="housing_start">#37474F</color>
+    <color name="housing_end">#102027</color>
+    <color name="lcd">#CFD8DC</color>
+    <color name="lcd_border">#263238</color>
+    <color name="count_outer">#1C262B</color>
+    <color name="count_inner">#263238</color>
+    <color name="count_ring">#37474F</color>
+    <color name="ic_launcher_background">#FFFFFF</color>
+    <color name="ic_launcher_background_night">#102027</color>
+</resources>
