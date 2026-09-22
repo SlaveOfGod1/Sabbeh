@@ -17,6 +17,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -49,7 +50,7 @@ public class DhikrStore {
     public String currentDhikrId = "1";
     public Themes.Theme theme = Themes.TEAL;
     public Themes.Theme lastTheme = Themes.TEAL;
-    public String language = "en";
+    public String language = systemLanguage();
     public boolean hapticEnabled = true;
     public boolean autoAdvanceEnabled = false;
     /** Last custom base color picked in the theme sheet (marker position memory). */
@@ -61,6 +62,20 @@ public class DhikrStore {
         this.app = app;
         resetToDefaults();
         load();
+    }
+
+    /** Phone language when the app supports it, otherwise English. */
+    private static String systemLanguage() {
+        try {
+            String code = Locale.getDefault().getLanguage();
+            if (code == null) return "en";
+            code = code.toLowerCase(Locale.US);
+            if (code.equals("in")) code = "ms"; // legacy Indonesian code -> Malay
+            for (String c : Translations.CODES) {
+                if (c.equals(code)) return code;
+            }
+        } catch (Exception ignored) {}
+        return "en";
     }
 
     public void addListener(Listener l) { listeners.add(l); }
@@ -338,7 +353,7 @@ public class DhikrStore {
             }
             if (parsed.has("currentDhikrId")) currentDhikrId = parsed.optString("currentDhikrId", currentDhikrId);
             if (parsed.has("theme")) theme = Themes.Theme.fromJson(parsed.optJSONObject("theme"));
-            if (parsed.has("language")) language = parsed.optString("language", "en");
+            if (parsed.has("language")) language = parsed.optString("language", systemLanguage());
             if (parsed.has("customColor")) customColor = parsed.optString("customColor", "#42A5F5");
             if (parsed.has("hapticEnabled")) hapticEnabled = parsed.optBoolean("hapticEnabled", true);
             if (parsed.has("autoAdvanceEnabled")) autoAdvanceEnabled = parsed.optBoolean("autoAdvanceEnabled", false);
