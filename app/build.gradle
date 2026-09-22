@@ -5,9 +5,7 @@ android {
     compileSdk 34
 
     defaultConfig {
-        // Temporary debug id so it installs side-by-side with the
-        // store/Expo build (com.Sabbeh) already on the phone.
-        applicationId 'com.Sabbeh.debug'
+        applicationId 'com.sabbeh'
         minSdk 24
         targetSdk 34
         versionCode 3

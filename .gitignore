@@ -8,5 +8,6 @@ app/build/
 app/release/
 build/
 debug.keystore
+*.keystore
 *.apk
 *.aab
