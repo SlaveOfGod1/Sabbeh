@@ -44,8 +44,8 @@
             android:exported="true"
             android:enabled="false"
             android:label="Sabbeh"
-            android:icon="@mipmap/ic_launcher_black_green"
-            android:roundIcon="@mipmap/ic_launcher_black_green">
+            android:icon="@mipmap/ic_launcher_white_trans"
+            android:roundIcon="@mipmap/ic_launcher_white_trans">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
