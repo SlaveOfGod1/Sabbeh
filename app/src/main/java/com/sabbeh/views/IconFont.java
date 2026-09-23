@@ -28,6 +28,7 @@ public final class IconFont {
     public static final int LOGO_GITHUB = 62451;
     public static final int BUG = 61883;           // bug-outline
     public static final int TRASH = 62966;         // trash-outline
+    public static final int APPS = 61730;          // apps-outline
 
     private static Typeface tf;
 

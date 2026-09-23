@@ -1,7 +1,9 @@
 package com.sabbeh.data;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Vibrator;
 import android.os.VibrationEffect;
 import android.os.Build;
@@ -55,6 +57,8 @@ public class DhikrStore {
     public boolean autoAdvanceEnabled = false;
     /** Last custom base color picked in the theme sheet (marker position memory). */
     public String customColor = "#42A5F5";
+    /** Launcher icon choice: default, green_trans, white_trans, white_black, black_trans. */
+    public String iconChoice = "default";
 
     private static final List<String> DEFAULT_ORDER = Arrays.asList("4", "1", "2", "3", "5", "6");
 
@@ -272,6 +276,56 @@ public class DhikrStore {
         notifyChanged();
     }
 
+    private static final String[] ICON_ALIASES = {
+            "IconGreenTransparent", "IconWhiteTransparent",
+            "IconWhiteOnBlack", "IconBlackTransparent"
+    };
+
+    private static String aliasKey(String alias) {
+        switch (alias) {
+            case "IconGreenTransparent": return "green_trans";
+            case "IconWhiteTransparent": return "white_trans";
+            case "IconWhiteOnBlack": return "white_black";
+            case "IconBlackTransparent": return "black_trans";
+            default: return "default";
+        }
+    }
+
+    /** Switch the launcher icon via activity-alias components. */
+    public void applyIconChoice(String key) {
+        iconChoice = key;
+        try {
+            PackageManager pm = app.getPackageManager();
+            // Enable the target first so the launcher never loses the icon.
+            if (!"default".equals(key)) {
+                for (String alias : ICON_ALIASES) {
+                    if (aliasKey(alias).equals(key)) {
+                        pm.setComponentEnabledSetting(
+                                new ComponentName(app, "com.sabbeh." + alias),
+                                PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+                                PackageManager.DONT_KILL_APP);
+                    }
+                }
+            }
+            pm.setComponentEnabledSetting(
+                    new ComponentName(app, "com.sabbeh.MainActivity"),
+                    "default".equals(key)
+                            ? PackageManager.COMPONENT_ENABLED_STATE_ENABLED
+                            : PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+                    PackageManager.DONT_KILL_APP);
+            for (String alias : ICON_ALIASES) {
+                if (!aliasKey(alias).equals(key)) {
+                    pm.setComponentEnabledSetting(
+                            new ComponentName(app, "com.sabbeh." + alias),
+                            PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+                            PackageManager.DONT_KILL_APP);
+                }
+            }
+        } catch (Exception ignored) {}
+        save();
+        notifyChanged();
+    }
+
     private void vibrateRound() {
         try {
             Vibrator vib = (Vibrator) app.getSystemService(Context.VIBRATOR_SERVICE);
@@ -314,6 +368,7 @@ public class DhikrStore {
             data.put("theme", theme.toJson());
             data.put("language", language);
             data.put("customColor", customColor);
+            data.put("iconChoice", iconChoice);
             data.put("hapticEnabled", hapticEnabled);
             data.put("autoAdvanceEnabled", autoAdvanceEnabled);
             SharedPreferences sp = app.getSharedPreferences(PREFS, Context.MODE_PRIVATE);
@@ -355,6 +410,7 @@ public class DhikrStore {
             if (parsed.has("theme")) theme = Themes.Theme.fromJson(parsed.optJSONObject("theme"));
             if (parsed.has("language")) language = parsed.optString("language", systemLanguage());
             if (parsed.has("customColor")) customColor = parsed.optString("customColor", "#42A5F5");
+            if (parsed.has("iconChoice")) iconChoice = parsed.optString("iconChoice", "default");
             if (parsed.has("hapticEnabled")) hapticEnabled = parsed.optBoolean("hapticEnabled", true);
             if (parsed.has("autoAdvanceEnabled")) autoAdvanceEnabled = parsed.optBoolean("autoAdvanceEnabled", false);
         } catch (Exception ignored) {}

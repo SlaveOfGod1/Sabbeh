@@ -833,6 +833,31 @@ public class MainActivity extends Activity {
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         content.addView(langCard);
 
+        // app icon picker (launcher icon via activity-alias components)
+        content.addView(sectionHeader(IconFont.APPS, store.t("appIcon"), textC));
+        LinearLayout iconCard = card(cardC);
+        iconCard.setOrientation(LinearLayout.VERTICAL);
+        String[][] iconOpts = {
+                {"default", store.t("iconDefault")},
+                {"green_trans", store.t("iconGreenTrans")},
+                {"white_trans", store.t("iconWhiteTrans")},
+                {"white_black", store.t("iconWhiteBlack")},
+                {"black_trans", store.t("iconBlackTrans")},
+        };
+        for (int i = 0; i < iconOpts.length; i++) {
+            final String key = iconOpts[i][0];
+            boolean sel = key.equals(store.iconChoice);
+            TextView row = new TextView(this);
+            row.setText((sel ? "● " : "○ ") + iconOpts[i][1]);
+            row.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+            row.setTypeface(null, sel ? Typeface.BOLD : Typeface.NORMAL);
+            row.setTextColor(sel ? pc() : textC);
+            row.setPadding(dp(4), dp(10), dp(4), dp(10));
+            row.setOnClickListener(v -> store.applyIconChoice(key));
+            iconCard.addView(row);
+        }
+        content.addView(iconCard);
+
         // haptic + auto-advance (same row layout, one shared builder)
         content.addView(toggleRow(IconFont.PHONE_PORTRAIT,
                 store.t("hapticFeedback"), store.t("hapticFeedbackDesc"),

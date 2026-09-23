@@ -35,6 +35,7 @@
 - **4 Preset Themes**: Teal, Purple, Blue, Rose
 - **Custom Color Picker**: Choose any color you like, the app remembers it
 - **Night Mode**: Dark theme for comfortable use at night
+- **App Icon**: Switch the launcher icon (Settings > App icon)
 
 ### 🌍 Multi-Language Support
 Fully translated in 7 languages:
