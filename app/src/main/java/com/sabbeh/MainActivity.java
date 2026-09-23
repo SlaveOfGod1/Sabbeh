@@ -833,30 +833,9 @@ public class MainActivity extends Activity {
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         content.addView(langCard);
 
-        // app icon picker (launcher icon via activity-alias components)
-        content.addView(sectionHeader(IconFont.APPS, store.t("appIcon"), textC));
-        LinearLayout iconCard = card(cardC);
-        iconCard.setOrientation(LinearLayout.VERTICAL);
-        String[][] iconOpts = {
-                {"default", store.t("iconDefault")},
-                {"green_trans", store.t("iconGreenTrans")},
-                {"white_trans", store.t("iconWhiteTrans")},
-                {"white_black", store.t("iconWhiteBlack")},
-                {"black_trans", store.t("iconBlackTrans")},
-        };
-        for (int i = 0; i < iconOpts.length; i++) {
-            final String key = iconOpts[i][0];
-            boolean sel = key.equals(store.iconChoice);
-            TextView row = new TextView(this);
-            row.setText((sel ? "● " : "○ ") + iconOpts[i][1]);
-            row.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-            row.setTypeface(null, sel ? Typeface.BOLD : Typeface.NORMAL);
-            row.setTextColor(sel ? pc() : textC);
-            row.setPadding(dp(4), dp(10), dp(4), dp(10));
-            row.setOnClickListener(v -> store.applyIconChoice(key));
-            iconCard.addView(row);
-        }
-        content.addView(iconCard);
+        // app icon picker: one row showing the current choice, tap opens a dialog
+        content.addView(actionRow(IconFont.APPS, store.t("appIcon"), iconChoiceLabel(),
+                cardC, textC, subC, v -> openIconPickerDialog()));
 
         // haptic + auto-advance (same row layout, one shared builder)
         content.addView(toggleRow(IconFont.PHONE_PORTRAIT,
@@ -1064,6 +1043,58 @@ public class MainActivity extends Activity {
     }
 
     // ================= DIALOGS =================
+
+    /** Human label for the current launcher icon choice. */
+    private String iconChoiceLabel() {
+        switch (store.iconChoice) {
+            case "green_trans": return store.t("iconGreenTrans");
+            case "white_trans": return store.t("iconWhiteTrans");
+            case "white_black": return store.t("iconWhiteBlack");
+            case "black_trans": return store.t("iconBlackTrans");
+            default: return store.t("iconDefault");
+        }
+    }
+
+    /** Icon picker prompt reusing the themed dialog style. */
+    private void openIconPickerDialog() {
+        boolean isDark = dark();
+        LinearLayout box = dialogBox();
+        TextView mt = new TextView(this);
+        mt.setText(store.t("appIcon"));
+        mt.setGravity(Gravity.CENTER);
+        mt.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+        mt.setTypeface(Typeface.DEFAULT_BOLD);
+        mt.setTextColor(Color.parseColor(isDark ? "#ECEFF1" : "#37474F"));
+        box.addView(mt);
+        AlertDialog dlg = new AlertDialog.Builder(this).setView(box).create();
+
+        String[][] iconOpts = {
+                {"default", store.t("iconDefault")},
+                {"green_trans", store.t("iconGreenTrans")},
+                {"white_trans", store.t("iconWhiteTrans")},
+                {"white_black", store.t("iconWhiteBlack")},
+                {"black_trans", store.t("iconBlackTrans")},
+        };
+        for (String[] opt : iconOpts) {
+            final String key = opt[0];
+            boolean sel = key.equals(store.iconChoice);
+            TextView row = optionBtn(opt[1],
+                    sel ? pc() : (isDark ? Color.parseColor("#455A64") : Color.parseColor("#F7F9F9")),
+                    sel ? Color.WHITE : (isDark ? Color.parseColor("#ECEFF1") : Color.parseColor("#455A64")));
+            row.setOnClickListener(v -> {
+                dlg.dismiss();
+                store.applyIconChoice(key);
+            });
+            LinearLayout.LayoutParams op = new LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            op.setMargins(0, dp(12), 0, 0);
+            box.addView(row, op);
+        }
+        dlg.show();
+        if (dlg.getWindow() != null) {
+            dlg.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        }
+    }
 
     /** Themed confirm dialog (matches light/dark theme, unlike system alerts). */
     private void confirmDialog(String title, String message, String okLabel,

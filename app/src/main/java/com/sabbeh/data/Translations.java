@@ -73,7 +73,7 @@ public class Translations {
         en.put("autoAdvance", "Auto-advance");
         en.put("autoAdvanceDesc", "Automatically switch to the next dhikr after finishing a round");
         en.put("appIcon", "App icon");
-        en.put("iconDefault", "Default (green)");
+        en.put("iconDefault", "Automatic");
         en.put("iconGreenTrans", "Green transparent");
         en.put("iconWhiteTrans", "White transparent");
         en.put("iconWhiteBlack", "White on black");
@@ -151,7 +151,7 @@ public class Translations {
         ar.put("autoAdvance", "الانتقال التلقائي");
         ar.put("autoAdvanceDesc", "الانتقال تلقائياً إلى الذكر التالي بعد إكمال الجولة");
         ar.put("appIcon", "أيقونة التطبيق");
-        ar.put("iconDefault", "الافتراضي (أخضر)");
+        ar.put("iconDefault", "تلقائي");
         ar.put("iconGreenTrans", "أخضر شفاف");
         ar.put("iconWhiteTrans", "أبيض شفاف");
         ar.put("iconWhiteBlack", "أبيض على أسود");
@@ -229,7 +229,7 @@ public class Translations {
         tr.put("autoAdvance", "Otomatik Geçiş");
         tr.put("autoAdvanceDesc", "Bir tur bittiğinde otomatik olarak sonraki zikre geç");
         tr.put("appIcon", "Uygulama simgesi");
-        tr.put("iconDefault", "Varsayılan (yeşil)");
+        tr.put("iconDefault", "Otomatik");
         tr.put("iconGreenTrans", "Şeffaf yeşil");
         tr.put("iconWhiteTrans", "Şeffaf beyaz");
         tr.put("iconWhiteBlack", "Siyah üstüne beyaz");
@@ -307,7 +307,7 @@ public class Translations {
         zh.put("autoAdvance", "自动切换");
         zh.put("autoAdvanceDesc", "完成一轮后自动切换到下一个 Dhikr");
         zh.put("appIcon", "应用图标");
-        zh.put("iconDefault", "默认（绿色）");
+        zh.put("iconDefault", "自动");
         zh.put("iconGreenTrans", "透明绿");
         zh.put("iconWhiteTrans", "透明白");
         zh.put("iconWhiteBlack", "黑底白");
@@ -385,7 +385,7 @@ public class Translations {
         ms.put("autoAdvance", "Auto-ikut");
         ms.put("autoAdvanceDesc", "Tukar ke zikir seterusnya secara automatik selepas satu pusingan selesai");
         ms.put("appIcon", "Ikon aplikasi");
-        ms.put("iconDefault", "Lalai (hijau)");
+        ms.put("iconDefault", "Automatik");
         ms.put("iconGreenTrans", "Hijau lutsinar");
         ms.put("iconWhiteTrans", "Putih lutsinar");
         ms.put("iconWhiteBlack", "Putih atas hitam");
@@ -463,7 +463,7 @@ public class Translations {
         ur.put("autoAdvance", "خودکار منتقلی");
         ur.put("autoAdvanceDesc", "چکر مکمل ہونے کے بعد خودکار طور پر اگلے ذکر پر جائیں");
         ur.put("appIcon", "ایپ آئیکن");
-        ur.put("iconDefault", "طے شدہ (سبز)");
+        ur.put("iconDefault", "خودکار");
         ur.put("iconGreenTrans", "شفاف سبز");
         ur.put("iconWhiteTrans", "شفاف سفید");
         ur.put("iconWhiteBlack", "سیاہ پر سفید");
@@ -541,7 +541,7 @@ public class Translations {
         ja.put("autoAdvance", "自動で次へ");
         ja.put("autoAdvanceDesc", "ラウンドが完了したら自動的に次のディクルへ切り替えます");
         ja.put("appIcon", "アプリアイコン");
-        ja.put("iconDefault", "デフォルト（緑）");
+        ja.put("iconDefault", "自動");
         ja.put("iconGreenTrans", "透明な緑");
         ja.put("iconWhiteTrans", "透明な白");
         ja.put("iconWhiteBlack", "黒地に白");
