@@ -104,6 +104,7 @@ public class MainActivity extends Activity {
         applyEdgeToEdge();
 
         store = DhikrStore.get(this);
+        store.migrateIfNeeded();
         store.addListener(listener);
 
         FrameLayout root = new FrameLayout(this);
@@ -1050,10 +1051,8 @@ public class MainActivity extends Activity {
     /** Human label for the current launcher icon choice. */
     private String iconChoiceLabel() {
         switch (store.iconChoice) {
-            case "green_trans": return store.t("iconGreenTrans");
-            case "white_trans": return store.t("iconWhiteTrans");
-            case "white_black": return store.t("iconWhiteBlack");
-            case "black_trans": return store.t("iconBlackTrans");
+            case "white_trans": return store.t("iconLight");
+            case "white_black": return store.t("iconDark");
             default: return store.t("iconDefault");
         }
     }
@@ -1073,10 +1072,8 @@ public class MainActivity extends Activity {
 
         String[][] iconOpts = {
                 {"default", store.t("iconDefault")},
-                {"green_trans", store.t("iconGreenTrans")},
-                {"white_trans", store.t("iconWhiteTrans")},
-                {"white_black", store.t("iconWhiteBlack")},
-                {"black_trans", store.t("iconBlackTrans")},
+                {"white_trans", store.t("iconLight")},
+                {"white_black", store.t("iconDark")},
         };
         for (String[] opt : iconOpts) {
             final String key = opt[0];

@@ -82,6 +82,22 @@ public class DhikrStore {
         return "en";
     }
 
+    /** Current app version gate for one-time migrations. */
+    private static final int CURRENT_VERSION = 16;
+    private static final String LAST_VERSION_KEY = "last_version_code";
+
+    /** Reset a stale launcher-icon pick once per upgrade (fresh installs skip). */
+    public void migrateIfNeeded() {
+        try {
+            SharedPreferences sp = app.getSharedPreferences(PREFS, Context.MODE_PRIVATE);
+            int last = sp.getInt(LAST_VERSION_KEY, 0);
+            if (last != 0 && last < CURRENT_VERSION) {
+                applyIconChoice("default");
+            }
+            sp.edit().putInt(LAST_VERSION_KEY, CURRENT_VERSION).apply();
+        } catch (Exception ignored) {}
+    }
+
     public void addListener(Listener l) { listeners.add(l); }
     public void removeListener(Listener l) { listeners.remove(l); }
     private void notifyChanged() {

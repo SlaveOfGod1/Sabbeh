@@ -31,8 +31,8 @@
             android:exported="true"
             android:enabled="false"
             android:label="Sabbeh"
-            android:icon="@drawable/icon_day_fg"
-            android:roundIcon="@drawable/icon_day_fg">
+            android:icon="@mipmap/ic_launcher_green_white"
+            android:roundIcon="@mipmap/ic_launcher_green_white">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -44,8 +44,8 @@
             android:exported="true"
             android:enabled="false"
             android:label="Sabbeh"
-            android:icon="@drawable/icon_mono_fg"
-            android:roundIcon="@drawable/icon_mono_fg">
+            android:icon="@mipmap/ic_launcher_black_green"
+            android:roundIcon="@mipmap/ic_launcher_black_green">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -70,8 +70,8 @@
             android:exported="true"
             android:enabled="false"
             android:label="Sabbeh"
-            android:icon="@drawable/icon_mono_black"
-            android:roundIcon="@drawable/icon_mono_black">
+            android:icon="@mipmap/ic_launcher_black_white"
+            android:roundIcon="@mipmap/ic_launcher_black_white">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
