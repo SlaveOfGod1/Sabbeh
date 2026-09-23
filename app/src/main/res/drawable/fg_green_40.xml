@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Green app icon scaled to ~40% (44dp of the 108dp adaptive canvas),
-     centered. InsetDrawable clips support back to API 1. -->
+<!-- Green app icon scaled so its glyph matches the light icon's glyph size
+     (white glyph fills 50% of its canvas; green glyph fills 68% of its own
+     PNG, so this box is 108*50/68 = ~80dp, i.e. 14dp insets). -->
 <inset xmlns:android="http://schemas.android.com/apk/res/android"
     android:drawable="@drawable/app_icon"
-    android:insetLeft="32dp"
-    android:insetTop="32dp"
-    android:insetRight="32dp"
-    android:insetBottom="32dp" />
+    android:insetLeft="14dp"
+    android:insetTop="14dp"
+    android:insetRight="14dp"
+    android:insetBottom="14dp" />
