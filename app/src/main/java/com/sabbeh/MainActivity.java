@@ -834,8 +834,11 @@ public class MainActivity extends Activity {
         content.addView(langCard);
 
         // app icon picker: one row showing the current choice, tap opens a dialog
-        content.addView(actionRow(IconFont.APPS, store.t("appIcon"), iconChoiceLabel(),
-                cardC, textC, subC, v -> openIconPickerDialog()));
+        LinearLayout iconRow = actionRow(IconFont.APPS, store.t("appIcon"), iconChoiceLabel(),
+                cardC, textC, subC, v -> openIconPickerDialog());
+        LinearLayout.LayoutParams ip = (LinearLayout.LayoutParams) iconRow.getLayoutParams();
+        ip.setMargins(0, dp(20), 0, dp(12));
+        content.addView(iconRow);
 
         // haptic + auto-advance (same row layout, one shared builder)
         content.addView(toggleRow(IconFont.PHONE_PORTRAIT,
