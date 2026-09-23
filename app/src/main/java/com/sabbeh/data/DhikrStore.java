@@ -83,7 +83,7 @@ public class DhikrStore {
     }
 
     /** Current app version gate for one-time migrations. */
-    private static final int CURRENT_VERSION = 16;
+    private static final int CURRENT_VERSION = 19;
     private static final String LAST_VERSION_KEY = "last_version_code";
 
     /** Reset a stale launcher-icon pick once per upgrade (fresh installs skip). */
