@@ -2,14 +2,14 @@
 
 <div align="center">
 
-![Sabbeh Logo](./app/src/main/res/drawable/app_icon.png)
+![Sabbeh Logo](./app/src/main/res/drawable/app_icon.png =300x)
 
 **A beautiful native Android counter for your dhikr and prayers.**
 
 *Free of Ads and Trackers. Made for the sake of Allah.*
 
-[![GitHub](https://img.shields.io/badge/GitHub-SlaveOfGod1-blue?logo=github)](https://github.com/SlaveOfGod1/Sabbeh)
-[![License](https://img.shields.io/badge/License-Personal%20Use%20Only-red)](./LICENSE.md)
+![Downloads](https://img.shields.io/github/downloads/SlaveOfGod1/Sabbeh/total?style=for-the-badge&color=green)
+![Stars](https://img.shields.io/github/stars/SlaveOfGod1/Sabbeh?style=for-the-badge&color=blue)
 
 [عربي](./README_AR.md)
 
