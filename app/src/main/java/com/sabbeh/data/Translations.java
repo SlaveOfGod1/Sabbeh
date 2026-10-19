@@ -72,10 +72,6 @@ public class Translations {
         en.put("hapticFeedbackDesc", "Vibrate when a round is completed");
         en.put("autoAdvance", "Auto-advance");
         en.put("autoAdvanceDesc", "Automatically switch to the next dhikr after finishing a round");
-        en.put("appIcon", "App icon");
-        en.put("iconDefault", "Default");
-        en.put("iconLight", "Light");
-        en.put("iconDark", "Dark");
         en.put("totalCount", "Total Count");
         en.put("countLabel", "COUNT");
         en.put("resetLabel", "RESET");
@@ -148,10 +144,6 @@ public class Translations {
         ar.put("hapticFeedbackDesc", "يُصدر اهتزازة قصيرة عند إتمام الجولة");
         ar.put("autoAdvance", "الانتقال التلقائي");
         ar.put("autoAdvanceDesc", "الانتقال تلقائياً إلى الذكر التالي بعد إكمال الجولة");
-        ar.put("appIcon", "أيقونة التطبيق");
-        ar.put("iconDefault", "الافتراضي");
-        ar.put("iconLight", "فاتح");
-        ar.put("iconDark", "داكن");
         ar.put("totalCount", "إجمالي العدد");
         ar.put("countLabel", "العدد");
         ar.put("resetLabel", "تصفير");
@@ -224,10 +216,6 @@ public class Translations {
         tr.put("hapticFeedbackDesc", "Bir tur tamamlandığında titreşim");
         tr.put("autoAdvance", "Otomatik Geçiş");
         tr.put("autoAdvanceDesc", "Bir tur bittiğinde otomatik olarak sonraki zikre geç");
-        tr.put("appIcon", "Uygulama simgesi");
-        tr.put("iconDefault", "Varsayılan");
-        tr.put("iconLight", "Açık");
-        tr.put("iconDark", "Koyu");
         tr.put("totalCount", "Toplam Sayı");
         tr.put("countLabel", "SAYI");
         tr.put("resetLabel", "SIFIRLA");
@@ -300,10 +288,6 @@ public class Translations {
         zh.put("hapticFeedbackDesc", "完成一轮时振动");
         zh.put("autoAdvance", "自动切换");
         zh.put("autoAdvanceDesc", "完成一轮后自动切换到下一个 Dhikr");
-        zh.put("appIcon", "应用图标");
-        zh.put("iconDefault", "默认");
-        zh.put("iconLight", "浅色");
-        zh.put("iconDark", "深色");
         zh.put("totalCount", "总计数");
         zh.put("countLabel", "计数");
         zh.put("resetLabel", "重置");
@@ -376,10 +360,6 @@ public class Translations {
         ms.put("hapticFeedbackDesc", "Getar apabila satu pusingan selesai");
         ms.put("autoAdvance", "Auto-ikut");
         ms.put("autoAdvanceDesc", "Tukar ke zikir seterusnya secara automatik selepas satu pusingan selesai");
-        ms.put("appIcon", "Ikon aplikasi");
-        ms.put("iconDefault", "Lalai");
-        ms.put("iconLight", "Cerah");
-        ms.put("iconDark", "Gelap");
         ms.put("totalCount", "Jumlah Kiraan");
         ms.put("countLabel", "KIRAAN");
         ms.put("resetLabel", "SET SEMULA");
@@ -452,10 +432,6 @@ public class Translations {
         ur.put("hapticFeedbackDesc", "چکر مکمل ہونے پر وائبریشن");
         ur.put("autoAdvance", "خودکار منتقلی");
         ur.put("autoAdvanceDesc", "چکر مکمل ہونے کے بعد خودکار طور پر اگلے ذکر پر جائیں");
-        ur.put("appIcon", "ایپ آئیکن");
-        ur.put("iconDefault", "طے شدہ");
-        ur.put("iconLight", "روشن");
-        ur.put("iconDark", "تاریک");
         ur.put("totalCount", "کل شمار");
         ur.put("countLabel", "شمار");
         ur.put("resetLabel", "ری سیٹ");
@@ -528,10 +504,6 @@ public class Translations {
         ja.put("hapticFeedbackDesc", "ラウンドが完了したときに振動します");
         ja.put("autoAdvance", "自動で次へ");
         ja.put("autoAdvanceDesc", "ラウンドが完了したら自動的に次のディクルへ切り替えます");
-        ja.put("appIcon", "アプリアイコン");
-        ja.put("iconDefault", "デフォルト");
-        ja.put("iconLight", "ライト");
-        ja.put("iconDark", "ダーク");
         ja.put("totalCount", "合計カウント");
         ja.put("countLabel", "カウント");
         ja.put("resetLabel", "リセット");

@@ -104,7 +104,6 @@ public class MainActivity extends Activity {
         applyEdgeToEdge();
 
         store = DhikrStore.get(this);
-        store.migrateIfNeeded();
         store.addListener(listener);
 
         FrameLayout root = new FrameLayout(this);
