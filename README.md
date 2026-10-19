@@ -2,7 +2,9 @@
 
 <div align="center">
 
-![Sabbeh Logo](./app/src/main/res/drawable/app_icon.png =300x)
+<p align="center">
+  <img src="./app/src/main/res/drawable/app_icon.png" alt="Sabbeh Logo" width="300"/>
+</p>
 
 **A beautiful native Android counter for your dhikr and prayers.**
 

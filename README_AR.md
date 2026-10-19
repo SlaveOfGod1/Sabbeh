@@ -2,14 +2,16 @@
 
 <div align="center">
 
-![شعار سبّح](./app/src/main/res/drawable/app_icon.png)
+<p align="center">
+  <img src="./app/src/main/res/drawable/app_icon.png" alt="شعار سبّح" width="300"/>
+</p>
 
 **عدّاد أندرويد جميل لأذكارك وصلواتك.**
 
 *مجاني وبدون إعلانات أو متتبعات. صُنع لوجه الله.*
 
-[![GitHub](https://img.shields.io/badge/GitHub-SlaveOfGod1-blue?logo=github)](https://github.com/SlaveOfGod1/Sabbeh)
-[![License](https://img.shields.io/badge/License-Personal%20Use%20Only-red)](./LICENSE.md)
+![Downloads](https://img.shields.io/github/downloads/SlaveOfGod1/Sabbeh/total?style=for-the-badge&color=green)
+![Stars](https://img.shields.io/github/stars/SlaveOfGod1/Sabbeh?style=for-the-badge&color=blue)
 
 [English](./README.md)
 
